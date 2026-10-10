@@ -1,0 +1,32 @@
+
+<p style="color: green"><%= notice %></p>
+
+<div class="container py-5">
+
+  <!-- Page Heading -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="fw-bold">Discover Delicious Food</h1>
+      <p class="text-muted">Order your favourites from our restaurants.</p>
+    </div>
+
+    <%= link_to "🛒 View Cart", "#",
+        class: "btn btn-outline-warning" %>
+  </div>
+
+  <!-- Product Grid: 3 Cards Per Row -->
+  <div class="row g-4">
+
+    <% @products.each do |product| %>
+        <%= render partial: "product", locals: { product: product } %>
+    <% end %>
+
+  </div>
+
+  <% if @products.empty? %>
+    <div class="alert alert-info mt-4">
+      No products available yet. Add some products to get started!
+    </div>
+  <% end %>
+
+</div>
