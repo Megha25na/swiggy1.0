@@ -1,0 +1,33 @@
+one:
+  user: one
+  restaurant: one
+  restaurant_id: 1
+  restru_id: 1
+  total: 320
+  subtotal: 280
+  delivery_fee: 40
+  tax: 0
+  discount: 0
+  order_status: "placed"
+  payment_status: "paid"
+  payment_method: "Cash on Delivery"
+  delivery_address: "123 MG Road, Pune"
+  contact_phone: "9876543210"
+  customer_name: "User One"
+
+two:
+  user: two
+  restaurant: two
+  restaurant_id: 2
+  restru_id: 2
+  total: 280
+  subtotal: 240
+  delivery_fee: 40
+  tax: 0
+  discount: 0
+  order_status: "delivered"
+  payment_status: "paid"
+  payment_method: "Demo UPI"
+  delivery_address: "456 FC Road, Pune"
+  contact_phone: "9876543211"
+  customer_name: "Admin User"

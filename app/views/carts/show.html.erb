@@ -1,0 +1,149 @@
+<div class="container py-4">
+  <div class="mb-4">
+    <h1 class="h3 fw-bold mb-1">Your Food Cart</h1>
+    <p class="text-muted small">Review your selected delicacies before placing your order</p>
+  </div>
+
+  <% if cart.items.any? %>
+    <div class="row g-4">
+      <!-- Cart Items Section -->
+      <div class="col-lg-8">
+        <!-- Restaurant Header -->
+        <% if @restaurant.present? %>
+          <div class="card border-0 rounded-4 shadow-sm p-3 mb-3 bg-white d-flex flex-row align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+              <img src="<%= @restaurant.display_image %>" alt="<%= @restaurant.name %>" class="rounded-3" style="width: 54px; height: 54px; object-fit: cover;">
+              <div>
+                <h2 class="h5 fw-bold mb-0"><%= link_to @restaurant.name, restaurant_path(@restaurant), class: "text-dark text-decoration-none" %></h2>
+                <div class="text-muted small"><%= @restaurant.address.presence || @restaurant.city.presence || "Pune" %></div>
+              </div>
+            </div>
+            <%= button_to clear_cart_path, method: :delete, class: "btn btn-outline-danger btn-sm rounded-pill", data: { turbo_confirm: "Are you sure you want to clear your cart?" } do %>
+              <i class="bi bi-trash3 me-1"></i> Clear Cart
+            <% end %>
+          </div>
+        <% end %>
+
+        <!-- Items Card -->
+        <div class="card border-0 rounded-4 shadow-sm p-4 bg-white mb-3">
+          <h2 class="h5 fw-bold mb-3">Order Items (<%= cart.total_items_count %>)</h2>
+
+          <div class="d-flex flex-column gap-3">
+            <% cart.items.each do |item| %>
+              <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
+                <div class="d-flex align-items-center gap-3">
+                  <span class="food-type-icon <%= item.product.is_veg? ? 'veg' : 'non-veg' %>"></span>
+                  <div>
+                    <h3 class="h6 fw-bold mb-0"><%= item.product.name %></h3>
+                    <div class="text-muted small">₹<%= item.unit_price %> each</div>
+                  </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-4">
+                  <!-- Stepper -->
+                  <div class="qty-stepper">
+                    <%= button_to update_quantity_cart_path(product_id: item.product.id, quantity: item.quantity - 1), method: :patch, class: "border-0 bg-transparent text-warning fw-bold px-2", aria: { label: "Decrease quantity" } do %>-<% end %>
+                    <span class="qty-val"><%= item.quantity %></span>
+                    <%= button_to update_quantity_cart_path(product_id: item.product.id, quantity: item.quantity + 1), method: :patch, class: "border-0 bg-transparent text-warning fw-bold px-2", aria: { label: "Increase quantity" } do %>+<% end %>
+                  </div>
+
+                  <div class="fw-bold text-dark text-end" style="min-width: 65px;">
+                    ₹<%= item.line_total %>
+                  </div>
+
+                  <%= button_to remove_item_cart_path(product_id: item.product.id), method: :delete, class: "btn btn-link text-muted p-0 border-0", title: "Remove Item", aria: { label: "Remove item" } do %>
+                    <i class="bi bi-x-circle text-danger fs-5"></i>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+
+          <!-- Add more items link -->
+          <div class="mt-3 text-end">
+            <%= link_to restaurant_path(@restaurant || 1), class: "text-warning fw-bold small text-decoration-none" do %>
+              <i class="bi bi-plus-circle me-1"></i> Add more items from menu
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Delivery note / tip -->
+        <div class="p-3 bg-light rounded-4 border d-flex align-items-center gap-3">
+          <i class="bi bi-shield-check text-success fs-3"></i>
+          <div>
+            <div class="fw-bold small text-dark">Swigy On-Time Guarantee</div>
+            <div class="text-muted" style="font-size: 0.8rem;">Your food is prepared fresh and dispatched promptly with live GPS tracking.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bill & Checkout Column -->
+      <div class="col-lg-4">
+        <div class="card border-0 rounded-4 shadow-sm p-4 bg-white sticky-top" style="top: 90px;">
+          <!-- Promo Code Box -->
+          <div class="mb-4">
+            <label class="form-label small fw-bold text-dark">Apply Coupon / Offer</label>
+            <div class="input-group">
+              <input type="text" class="form-control form-control-sm text-uppercase" placeholder="E.g. SWIGY50" value="SWIGY50">
+              <button class="btn btn-dark btn-sm fw-bold px-3" type="button" onclick="alert('Promo code applied successfully!');">Apply</button>
+            </div>
+            <div class="small text-success mt-1"><i class="bi bi-check-circle me-1"></i> Coupon <strong>SWIGY50</strong> is ready to use!</div>
+          </div>
+
+          <h2 class="h5 fw-bold mb-3 border-bottom pb-2">Bill Details</h2>
+
+          <div class="bill-row">
+            <span>Item Subtotal</span>
+            <span class="fw-semibold">₹<%= cart.subtotal %></span>
+          </div>
+
+          <div class="bill-row">
+            <span>Delivery Fee</span>
+            <% if cart.delivery_fee == 0 %>
+              <span class="text-success fw-bold">FREE</span>
+            <% else %>
+              <span>₹<%= cart.delivery_fee %></span>
+            <% end %>
+          </div>
+
+          <div class="bill-row">
+            <span>GST and Restaurant Charges (5%)</span>
+            <span>₹<%= cart.tax %></span>
+          </div>
+
+          <div class="bill-row total-row">
+            <span>Grand Total</span>
+            <span class="text-warning">₹<%= cart.total %></span>
+          </div>
+
+          <div class="mt-4">
+            <% if user_signed_in? %>
+              <%= link_to checkout_path, class: "btn btn-swigy-primary w-100 py-2 fs-6" do %>
+                Proceed to Checkout <i class="bi bi-arrow-right ms-1"></i>
+              <% end %>
+            <% else %>
+              <%= link_to new_user_session_path, class: "btn btn-swigy-primary w-100 py-2 fs-6" do %>
+                Sign In to Checkout <i class="bi bi-arrow-right ms-1"></i>
+              <% end %>
+              <div class="text-center small text-muted mt-2">
+                Sign in to choose delivery address & payment
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <!-- Empty Cart State -->
+    <div class="text-center py-5">
+      <div class="card border-0 rounded-4 shadow-sm p-5 bg-white d-inline-block" style="max-width: 480px;">
+        <div class="mb-4">
+          <i class="bi bi-bag-x fs-1 text-warning opacity-75" style="font-size: 5rem !important;"></i>
+        </div>
+        <h2 class="h4 fw-bold mb-2">Your cart is empty</h2>
+        <p class="text-muted small mb-4">Good food is always cooking! Explore restaurants near you and build your feast.</p>
+        <%= link_to "Explore Restaurants", restaurants_path, class: "btn btn-swigy-primary px-4 py-2 rounded-pill" %>
+      </div>
+    </div>
+  <% end %>
+</div>

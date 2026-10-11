@@ -1,0 +1,27 @@
+one:
+  name: "Paradise Biryani"
+  description: "Authentic Hyderabadi Dum Biryani and Kebabs"
+  cuisine: "Biryani, North Indian, Mughlai"
+  rating: 4.5
+  delivery_time: "25-30 mins"
+  price_for_two: 400
+  address: "Shop 12, Kothrud"
+  city: "Pune"
+  image_url: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80"
+  featured: true
+  pure_veg: false
+  phone: "9876543210"
+
+two:
+  name: "Green Leaf Pure Veg"
+  description: "Fresh vegetarian delicacies and South Indian breakfast"
+  cuisine: "South Indian, North Indian, Street Food"
+  rating: 4.3
+  delivery_time: "20-25 mins"
+  price_for_two: 300
+  address: "FC Road, Shivajinagar"
+  city: "Pune"
+  image_url: "https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&w=800&q=80"
+  featured: false
+  pure_veg: true
+  phone: "9876543211"

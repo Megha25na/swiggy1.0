@@ -1,10 +1,1032 @@
-/*
- * This is a manifest file that'll be compiled into application.css.
- *
- * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
- * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
- * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
- * depending on specificity.
- *
- * Consider organizing styles into separate files for maintainability.
- */
+/* ==========================================================================
+   Swigy - Modern Food Delivery Platform Stylesheet
+   Inspired by Swiggy & Zomato with Bespoke Modern Aesthetics
+   ========================================================================== */
+
+:root {
+  --swigy-primary: #FC8019;
+  --swigy-primary-dark: #E26D07;
+  --swigy-primary-light: #FFF2E7;
+  --swigy-primary-glow: rgba(252, 128, 25, 0.2);
+  --swigy-dark: #1C1C24;
+  --swigy-text-main: #282C3F;
+  --swigy-text-muted: #686B78;
+  --swigy-text-light: #93959F;
+  --swigy-bg-light: #F7F8FA;
+  --swigy-bg-card: #FFFFFF;
+  --swigy-border: #E9ECEF;
+  --swigy-border-subtle: #F1F3F5;
+  --swigy-veg-green: #0F8A65;
+  --swigy-veg-bg: #E7F6F0;
+  --swigy-nonveg-red: #E43B4F;
+  --swigy-nonveg-bg: #FEECEF;
+  --swigy-rating-green: #257D3E;
+  --swigy-rating-yellow: #DB7C38;
+  --swigy-radius-sm: 8px;
+  --swigy-radius-md: 12px;
+  --swigy-radius-lg: 16px;
+  --swigy-radius-xl: 24px;
+  --swigy-shadow-sm: 0 2px 8px rgba(40, 44, 63, 0.06);
+  --swigy-shadow-md: 0 4px 16px rgba(40, 44, 63, 0.08);
+  --swigy-shadow-lg: 0 10px 30px rgba(40, 44, 63, 0.12);
+  --swigy-shadow-hover: 0 12px 28px rgba(252, 128, 25, 0.15);
+  --swigy-font: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+/* Global Reset & Base */
+body {
+  font-family: var(--swigy-font);
+  color: var(--swigy-text-main);
+  background-color: #FAFBFC;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+
+main {
+  flex: 1;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s ease;
+}
+
+/* Accessibility: Visible Focus Rings */
+:focus-visible {
+  outline: 2px solid var(--swigy-primary) !important;
+  outline-offset: 2px !important;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  box-shadow: 0 0 0 3px var(--swigy-primary-glow) !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   Navbar Styles
+   -------------------------------------------------------------------------- */
+.swigy-navbar {
+  background-color: #FFFFFF;
+  border-bottom: 1px solid var(--swigy-border);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  padding: 0.75rem 0;
+}
+
+.brand-logo {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--swigy-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.brand-logo:hover {
+  color: var(--swigy-primary-dark);
+}
+
+.brand-logo .logo-badge {
+  background: var(--swigy-primary);
+  color: #fff;
+  border-radius: 8px;
+  padding: 2px 8px;
+  font-size: 1.1rem;
+}
+
+.location-picker {
+  background: #F8F9FA;
+  border: 1px solid var(--swigy-border);
+  border-radius: 20px;
+  padding: 0.45rem 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.location-picker:hover {
+  background: #FFF2E7;
+  border-color: var(--swigy-primary);
+}
+
+.location-picker .loc-city {
+  font-weight: 700;
+  color: var(--swigy-text-main);
+}
+
+.location-picker .loc-sub {
+  color: var(--swigy-text-muted);
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.navbar-search-bar {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+}
+
+.navbar-search-bar input {
+  width: 100%;
+  padding: 0.55rem 1rem 0.55rem 2.4rem;
+  border-radius: 24px;
+  border: 1px solid var(--swigy-border);
+  background-color: #F8F9FA;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.navbar-search-bar input:focus {
+  background-color: #FFFFFF;
+  border-color: var(--swigy-primary);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--swigy-primary-glow);
+}
+
+.navbar-search-bar i {
+  position: absolute;
+  left: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--swigy-text-muted);
+}
+
+.nav-link-swigy {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  font-size: 0.925rem;
+  color: var(--swigy-text-main);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.nav-link-swigy:hover {
+  color: var(--swigy-primary);
+  background-color: var(--swigy-primary-light);
+}
+
+.nav-cart-btn {
+  background: var(--swigy-primary-light);
+  color: var(--swigy-primary);
+  font-weight: 700;
+  border: 1px solid rgba(252, 128, 25, 0.3);
+  padding: 0.45rem 1.1rem;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.nav-cart-btn:hover {
+  background: var(--swigy-primary);
+  color: #fff;
+  box-shadow: 0 4px 12px var(--swigy-primary-glow);
+}
+
+.cart-count-badge {
+  background: var(--swigy-primary);
+  color: #fff;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  line-height: 1;
+}
+
+.nav-cart-btn:hover .cart-count-badge {
+  background: #fff;
+  color: var(--swigy-primary);
+}
+
+/* --------------------------------------------------------------------------
+   Hero & Banner Sections
+   -------------------------------------------------------------------------- */
+.hero-banner {
+  background: linear-gradient(135deg, #FFF6EE 0%, #FFFFFF 100%);
+  border-bottom: 1px solid var(--swigy-border);
+  padding: 3.5rem 0 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-banner::after {
+  content: '';
+  position: absolute;
+  right: -5%;
+  bottom: -20%;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(252, 128, 25, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero-title {
+  font-size: 2.75rem;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--swigy-dark);
+  letter-spacing: -1px;
+}
+
+.hero-title span {
+  color: var(--swigy-primary);
+}
+
+.hero-subtitle {
+  font-size: 1.125rem;
+  color: var(--swigy-text-muted);
+  margin-bottom: 2rem;
+}
+
+.hero-search-box {
+  background: #fff;
+  border-radius: 30px;
+  padding: 0.4rem 0.5rem 0.4rem 1.25rem;
+  box-shadow: var(--swigy-shadow-md);
+  border: 1px solid var(--swigy-border);
+  display: flex;
+  align-items: center;
+  max-width: 580px;
+  transition: box-shadow 0.2s ease;
+}
+
+.hero-search-box:focus-within {
+  box-shadow: 0 6px 20px var(--swigy-primary-glow);
+  border-color: var(--swigy-primary);
+}
+
+.hero-search-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 1rem;
+  color: var(--swigy-text-main);
+  background: transparent;
+}
+
+/* Food Category Rail */
+.category-card {
+  text-align: center;
+  padding: 0.75rem;
+  border-radius: var(--swigy-radius-md);
+  transition: transform 0.2s ease, background 0.2s ease;
+  display: block;
+  text-decoration: none;
+}
+
+.category-card:hover {
+  transform: translateY(-4px);
+  background: #FFF7F0;
+}
+
+.category-img-wrapper {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 0.5rem;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: var(--swigy-shadow-sm);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.category-card:hover .category-img-wrapper {
+  border-color: var(--swigy-primary);
+}
+
+.category-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.category-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--swigy-text-main);
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Restaurant Cards
+   -------------------------------------------------------------------------- */
+.restaurant-card {
+  background: var(--swigy-bg-card);
+  border-radius: var(--swigy-radius-lg);
+  border: 1px solid var(--swigy-border-subtle);
+  overflow: hidden;
+  box-shadow: var(--swigy-shadow-sm);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+.restaurant-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--swigy-shadow-hover);
+  border-color: rgba(252, 128, 25, 0.3);
+}
+
+.restaurant-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 190px;
+  overflow: hidden;
+  background-color: #EEE;
+}
+
+.restaurant-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.restaurant-card:hover .restaurant-img-wrap img {
+  transform: scale(1.05);
+}
+
+.restaurant-badge-offer {
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  background: rgba(28, 28, 36, 0.85);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.restaurant-badge-veg {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #0F8A65;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.restaurant-content {
+  padding: 1rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.restaurant-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--swigy-dark);
+  margin-bottom: 0.35rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.restaurant-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.45rem;
+}
+
+.rating-badge {
+  background: var(--swigy-rating-green);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.rating-badge.rating-average {
+  background: var(--swigy-rating-yellow);
+}
+
+.meta-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #C4C4C4;
+}
+
+.meta-time {
+  font-weight: 700;
+  color: var(--swigy-text-main);
+}
+
+.meta-price {
+  color: var(--swigy-text-muted);
+}
+
+.restaurant-cuisine {
+  font-size: 0.85rem;
+  color: var(--swigy-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.25rem;
+}
+
+.restaurant-location {
+  font-size: 0.8rem;
+  color: var(--swigy-text-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: auto;
+}
+
+/* --------------------------------------------------------------------------
+   Filter & Sorting Pills
+   -------------------------------------------------------------------------- */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  align-items: center;
+}
+
+.filter-pill {
+  background: #fff;
+  border: 1px solid var(--swigy-border);
+  color: var(--swigy-text-main);
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.filter-pill:hover {
+  border-color: var(--swigy-primary);
+  color: var(--swigy-primary);
+}
+
+.filter-pill.active {
+  background: var(--swigy-primary);
+  border-color: var(--swigy-primary);
+  color: #fff;
+  box-shadow: 0 2px 8px var(--swigy-primary-glow);
+}
+
+/* --------------------------------------------------------------------------
+   Menu Items & Product Cards
+   -------------------------------------------------------------------------- */
+.dish-card {
+  background: #fff;
+  border-radius: var(--swigy-radius-md);
+  border: 1px solid var(--swigy-border);
+  padding: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--swigy-shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.dish-card:hover {
+  border-color: rgba(252, 128, 25, 0.4);
+  box-shadow: var(--swigy-shadow-md);
+}
+
+.dish-info {
+  flex: 1;
+}
+
+.dish-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--swigy-dark);
+  margin-bottom: 0.25rem;
+}
+
+.dish-price {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--swigy-text-main);
+  margin-bottom: 0.45rem;
+}
+
+.dish-description {
+  font-size: 0.85rem;
+  color: var(--swigy-text-muted);
+  line-height: 1.45;
+  margin-bottom: 0.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.dish-action {
+  width: 130px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.dish-img {
+  width: 120px;
+  height: 105px;
+  border-radius: var(--swigy-radius-md);
+  object-fit: cover;
+  background-color: #EEE;
+}
+
+.dish-add-btn {
+  position: absolute;
+  bottom: -12px;
+  background: #fff;
+  color: var(--swigy-veg-green);
+  border: 1px solid var(--swigy-border);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  padding: 0.35rem 1.4rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+
+.dish-add-btn:hover {
+  background: var(--swigy-veg-green);
+  color: #fff;
+  border-color: var(--swigy-veg-green);
+}
+
+/* Veg / Non-Veg Indicator Icon */
+.food-type-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.35rem;
+}
+
+.food-type-icon.veg {
+  border: 2px solid var(--swigy-veg-green);
+}
+
+.food-type-icon.veg::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--swigy-veg-green);
+}
+
+.food-type-icon.non-veg {
+  border: 2px solid var(--swigy-nonveg-red);
+}
+
+.food-type-icon.non-veg::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 7px solid var(--swigy-nonveg-red);
+}
+
+/* --------------------------------------------------------------------------
+   Quantity Stepper
+   -------------------------------------------------------------------------- */
+.qty-stepper {
+  display: inline-flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--swigy-primary);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(252, 128, 25, 0.15);
+}
+
+.qty-stepper button,
+.qty-stepper input[type="submit"] {
+  background: transparent;
+  border: none;
+  color: var(--swigy-primary);
+  font-weight: 800;
+  font-size: 1rem;
+  padding: 0.25rem 0.65rem;
+  cursor: pointer;
+  line-height: 1;
+  transition: background 0.15s ease;
+}
+
+.qty-stepper button:hover,
+.qty-stepper input[type="submit"]:hover {
+  background: var(--swigy-primary-light);
+}
+
+.qty-stepper .qty-val {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--swigy-primary-dark);
+  min-width: 26px;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   Cart & Checkout Components
+   -------------------------------------------------------------------------- */
+.cart-card {
+  background: #fff;
+  border-radius: var(--swigy-radius-lg);
+  border: 1px solid var(--swigy-border);
+  box-shadow: var(--swigy-shadow-sm);
+  padding: 1.5rem;
+}
+
+.bill-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.925rem;
+  color: var(--swigy-text-muted);
+  margin-bottom: 0.65rem;
+}
+
+.bill-row.total-row {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--swigy-dark);
+  border-top: 1px dashed var(--swigy-border);
+  padding-top: 0.9rem;
+  margin-top: 0.9rem;
+}
+
+/* Order Status Badges */
+.badge-status-placed {
+  background-color: #E0F2FE;
+  color: #0369A1;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+.badge-status-confirmed {
+  background-color: #FEF3C7;
+  color: #B45309;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+.badge-status-preparing {
+  background-color: #FFEDD5;
+  color: #C2410C;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+.badge-status-delivering {
+  background-color: #EDE9FE;
+  color: #6D28D9;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+.badge-status-delivered {
+  background-color: #DCFCE7;
+  color: #15803D;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+.badge-status-cancelled {
+  background-color: #FEE2E2;
+  color: #B91C1C;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+/* --------------------------------------------------------------------------
+   Order Tracking Timeline
+   -------------------------------------------------------------------------- */
+.tracking-stepper {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin: 2.5rem 0;
+}
+
+.tracking-stepper::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  right: 30px;
+  height: 4px;
+  background: #E5E7EB;
+  z-index: 1;
+}
+
+.tracking-step {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  flex: 1;
+}
+
+.step-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #D1D5DB;
+  color: #9CA3AF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  margin: 0 auto 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.tracking-step.completed .step-icon {
+  background: var(--swigy-veg-green);
+  border-color: var(--swigy-veg-green);
+  color: #fff;
+}
+
+.tracking-step.current .step-icon {
+  background: var(--swigy-primary);
+  border-color: var(--swigy-primary);
+  color: #fff;
+  box-shadow: 0 0 0 6px var(--swigy-primary-glow);
+  animation: pulse-step 2s infinite;
+}
+
+@keyframes pulse-step {
+  0% { box-shadow: 0 0 0 0 rgba(252, 128, 25, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(252, 128, 25, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(252, 128, 25, 0); }
+}
+
+.step-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--swigy-text-main);
+  margin-bottom: 2px;
+}
+
+.step-subtext {
+  font-size: 0.75rem;
+  color: var(--swigy-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Swigy Buttons & Forms
+   -------------------------------------------------------------------------- */
+.btn-swigy-primary {
+  background-color: var(--swigy-primary);
+  color: #fff;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 0.65rem 1.4rem;
+  border: none;
+  box-shadow: 0 4px 14px var(--swigy-primary-glow);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-swigy-primary:hover {
+  background-color: var(--swigy-primary-dark);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(252, 128, 25, 0.3);
+}
+
+.btn-swigy-outline {
+  background-color: transparent;
+  color: var(--swigy-primary);
+  border: 1.5px solid var(--swigy-primary);
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 0.6rem 1.3rem;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-swigy-outline:hover {
+  background-color: var(--swigy-primary-light);
+  color: var(--swigy-primary-dark);
+}
+
+.swigy-form-card {
+  background: #fff;
+  border-radius: var(--swigy-radius-lg);
+  border: 1px solid var(--swigy-border);
+  box-shadow: var(--swigy-shadow-sm);
+  padding: 2.25rem;
+}
+
+.swigy-form-card .form-label {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--swigy-text-main);
+  margin-bottom: 0.4rem;
+}
+
+.swigy-form-card .form-control,
+.swigy-form-card .form-select {
+  border-radius: 10px;
+  border: 1px solid var(--swigy-border);
+  padding: 0.65rem 1rem;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.swigy-form-card .form-control:focus,
+.swigy-form-card .form-select:focus {
+  border-color: var(--swigy-primary);
+  box-shadow: 0 0 0 3px var(--swigy-primary-glow);
+}
+
+/* --------------------------------------------------------------------------
+   Footer Styles
+   -------------------------------------------------------------------------- */
+.swigy-footer {
+  background-color: #02060C;
+  color: #fff;
+  margin-top: 5rem;
+  padding-top: 4rem;
+  padding-bottom: 2rem;
+  border-top: 1px solid #1E232A;
+}
+
+.swigy-footer h6 {
+  color: #fff;
+  font-weight: 800;
+  font-size: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.swigy-footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.swigy-footer ul li {
+  margin-bottom: 0.65rem;
+}
+
+.swigy-footer ul li a {
+  color: #93959F;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.swigy-footer ul li a:hover {
+  color: #fff;
+}
+
+.footer-bottom {
+  border-top: 1px solid #1C222B;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  color: #686B78;
+  font-size: 0.85rem;
+}
+
+/* --------------------------------------------------------------------------
+   Floating Mobile Cart Bar
+   -------------------------------------------------------------------------- */
+.mobile-cart-bar {
+  display: none;
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  background: var(--swigy-veg-green);
+  color: #fff;
+  border-radius: 14px;
+  padding: 0.85rem 1.25rem;
+  box-shadow: 0 8px 24px rgba(15, 138, 101, 0.35);
+  z-index: 1050;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.mobile-cart-bar:hover {
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .mobile-cart-bar.has-items {
+    display: flex;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-banner {
+    padding: 2rem 0;
+  }
+
+  .category-img-wrapper {
+    width: 64px;
+    height: 64px;
+  }
+
+  .category-title {
+    font-size: 0.75rem;
+  }
+
+  .dish-card {
+    padding: 0.9rem;
+    gap: 0.75rem;
+  }
+
+  .dish-img {
+    width: 95px;
+    height: 85px;
+  }
+
+  .dish-action {
+    width: 100px;
+  }
+
+  .tracking-stepper {
+    overflow-x: auto;
+    padding-bottom: 0.75rem;
+  }
+
+  .tracking-step {
+    min-width: 80px;
+  }
+}
+

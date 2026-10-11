@@ -1,0 +1,82 @@
+<div class="container py-4">
+  <div class="mb-4">
+    <h1 class="h3 fw-bold mb-1">My Orders</h1>
+    <p class="text-muted small">Track current deliveries and view your past feasts</p>
+  </div>
+
+  <% if @orders.any? %>
+    <div class="row g-4">
+      <% @orders.each do |order| %>
+        <div class="col-lg-6">
+          <div class="card border-0 rounded-4 shadow-sm p-4 bg-white h-100">
+            <div class="d-flex justify-content-between align-items-start pb-3 border-bottom mb-3">
+              <div class="d-flex align-items-center gap-3">
+                <% if order.restaurant.present? %>
+                  <img src="<%= order.restaurant.display_image %>" alt="<%= order.restaurant.name %>" class="rounded-3" style="width: 50px; height: 50px; object-fit: cover;">
+                  <div>
+                    <h2 class="h5 fw-bold mb-0"><%= link_to order.restaurant.name, restaurant_path(order.restaurant), class: "text-dark text-decoration-none" %></h2>
+                    <div class="text-muted small"><%= order.created_at.strftime("%b %d, %Y • %I:%M %p") %></div>
+                  </div>
+                <% else %>
+                  <div class="bg-light rounded-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                    <i class="bi bi-shop fs-4 text-muted"></i>
+                  </div>
+                  <div>
+                    <h2 class="h5 fw-bold mb-0">Restaurant</h2>
+                    <div class="text-muted small"><%= order.created_at.strftime("%b %d, %Y • %I:%M %p") %></div>
+                  </div>
+                <% end %>
+              </div>
+
+              <div>
+                <span class="<%= order.status_badge_class %>">
+                  <%= order.order_status.titleize %>
+                </span>
+              </div>
+            </div>
+
+            <!-- Items list -->
+            <div class="mb-3">
+              <div class="small text-muted mb-2 fw-semibold">Order #SWG-<%= order.id %>:</div>
+              <ul class="list-unstyled mb-0 small">
+                <% order.items.each do |item| %>
+                  <li class="d-flex justify-content-between py-1">
+                    <span><%= item.product&.name || "Item" %> <span class="text-muted">x <%= item.quantity %></span></span>
+                    <span class="fw-semibold">₹<%= item.line_total %></span>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+
+            <!-- Total and Actions footer -->
+            <div class="d-flex justify-content-between align-items-center pt-3 border-top mt-auto">
+              <div>
+                <span class="small text-muted d-block">Total Paid</span>
+                <span class="fw-bold fs-5 text-dark">₹<%= order.total %></span>
+              </div>
+
+              <div class="d-flex gap-2">
+                <%= link_to order_path(order), class: "btn btn-outline-dark btn-sm rounded-pill px-3" do %>
+                  <i class="bi bi-geo-alt me-1"></i> <%= order.active? ? "Track Order" : "View Receipt" %>
+                <% end %>
+
+                <%= button_to reorder_order_path(order), method: :post, class: "btn btn-swigy-primary btn-sm rounded-pill px-3" do %>
+                  <i class="bi bi-arrow-repeat me-1"></i> Reorder
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center py-5">
+      <div class="card border-0 rounded-4 shadow-sm p-5 bg-white d-inline-block" style="max-width: 480px;">
+        <i class="bi bi-bag-check fs-1 text-muted mb-3 d-block opacity-50"></i>
+        <h2 class="h4 fw-bold mb-2">No orders placed yet</h2>
+        <p class="text-muted small mb-4">You haven't ordered any delicious food yet. Check out top rated places around you!</p>
+        <%= link_to "Find Food Now", root_path, class: "btn btn-swigy-primary px-4 py-2 rounded-pill" %>
+      </div>
+    </div>
+  <% end %>
+</div>

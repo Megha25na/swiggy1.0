@@ -1,0 +1,67 @@
+<div class="container py-4">
+  <!-- Header & Title -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+      <h1 class="h3 fw-bold mb-1">Explore Restaurants in Pune</h1>
+      <p class="text-muted small mb-0"><%= @restaurants.count %> <%= 'restaurant'.pluralize(@restaurants.count) %> delivering to your location</p>
+    </div>
+
+    <!-- Sorting Dropdown -->
+    <div class="d-flex align-items-center gap-2">
+      <span class="small text-muted fw-bold d-none d-sm-inline">Sort by:</span>
+      <div class="dropdown">
+        <button class="btn btn-white border rounded-pill dropdown-toggle px-3 py-2 small fw-semibold shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <%= case params[:sort]
+              when "rating" then "Rating: High to Low"
+              when "price_asc" then "Cost: Low to High"
+              when "price_desc" then "Cost: High to Low"
+              when "delivery_time" then "Delivery Time"
+              else "Relevance / Rating"
+              end %>
+        </button>
+
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-2">
+          <li><%= link_to "Rating: High to Low", restaurants_path(sort: "rating", cuisine: params[:cuisine], pure_veg: params[:pure_veg]), class: "dropdown-item rounded-2 py-2 small" %></li>
+          <li><%= link_to "Cost: Low to High", restaurants_path(sort: "price_asc", cuisine: params[:cuisine], pure_veg: params[:pure_veg]), class: "dropdown-item rounded-2 py-2 small" %></li>
+          <li><%= link_to "Cost: High to Low", restaurants_path(sort: "price_desc", cuisine: params[:cuisine], pure_veg: params[:pure_veg]), class: "dropdown-item rounded-2 py-2 small" %></li>
+          <li><%= link_to "Fast Delivery", restaurants_path(sort: "delivery_time", cuisine: params[:cuisine], pure_veg: params[:pure_veg]), class: "dropdown-item rounded-2 py-2 small" %></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters Row -->
+  <div class="filter-bar">
+    <%= link_to "All Cuisines", restaurants_path(sort: params[:sort]), class: "filter-pill #{'active' unless params[:cuisine].present? || params[:pure_veg].present?}" %>
+    
+    <%= link_to restaurants_path(pure_veg: (params[:pure_veg] == 'true' ? nil : 'true'), cuisine: params[:cuisine], sort: params[:sort]), class: "filter-pill #{'active' if params[:pure_veg] == 'true'}" do %>
+      <span class="food-type-icon veg me-1" style="width: 12px; height: 12px; margin-bottom: 0;"></span> Pure Veg
+    <% end %>
+
+    <% ["Biryani", "North Indian", "South Indian", "Chinese", "Pizza", "Fast Food", "Desserts"].each do |c| %>
+      <%= link_to c, restaurants_path(cuisine: c, pure_veg: params[:pure_veg], sort: params[:sort]), class: "filter-pill #{'active' if params[:cuisine] == c}" %>
+    <% end %>
+
+    <% if params[:cuisine].present? || params[:pure_veg].present? || params[:sort].present? %>
+      <%= link_to "Clear Filters", restaurants_path, class: "filter-pill text-danger border-danger" %>
+    <% end %>
+  </div>
+
+  <!-- Restaurants Grid -->
+  <div class="row g-4 mt-1">
+    <% if @restaurants.any? %>
+      <% @restaurants.each do |restaurant| %>
+        <%= render partial: "restaurants/restaurant_card", locals: { restaurant: restaurant } %>
+      <% end %>
+    <% else %>
+      <div class="col-12 py-5 text-center">
+        <div class="bg-white p-5 rounded-4 border shadow-sm">
+          <i class="bi bi-search fs-1 text-muted mb-3 d-block"></i>
+          <h4 class="fw-bold">No restaurants match your criteria</h4>
+          <p class="text-muted">Try removing or resetting some of your filters.</p>
+          <%= link_to "View All Restaurants", restaurants_path, class: "btn btn-swigy-primary rounded-pill px-4" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

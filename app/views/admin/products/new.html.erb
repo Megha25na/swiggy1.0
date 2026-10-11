@@ -1,0 +1,14 @@
+<div class="container py-4">
+  <div class="mb-4">
+    <div class="d-flex align-items-center gap-2 mb-1">
+      <%= link_to "Menu Items", admin_products_path, class: "text-muted small text-decoration-none" %>
+      <i class="bi bi-chevron-right text-muted small"></i>
+      <h1 class="h3 fw-bold mb-0">Add New Dish</h1>
+    </div>
+    <p class="text-muted small">Add a new item to a restaurant's menu with pricing and details</p>
+  </div>
+
+  <div class="card border-0 rounded-4 shadow-sm p-4 p-md-5 bg-white">
+    <%= render "form", product: @product %>
+  </div>
+</div>

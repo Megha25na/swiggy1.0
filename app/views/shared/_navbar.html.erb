@@ -1,0 +1,114 @@
+<header class="swigy-navbar">
+  <div class="container d-flex align-items-center justify-content-between gap-3">
+    <!-- Brand & Location -->
+    <div class="d-flex align-items-center gap-3">
+      <%= link_to root_path, class: "brand-logo" do %>
+        <span>Swigy</span>
+        <span class="logo-badge"><i class="bi bi-bicycle"></i></span>
+      <% end %>
+
+      <!-- Location dropdown -->
+      <div class="dropdown d-none d-md-block">
+        <button class="location-picker dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-geo-alt-fill text-warning"></i>
+          <span class="loc-city">Pune</span>
+          <span class="loc-sub">FC Road, Shivajinagar</span>
+        </button>
+        <ul class="dropdown-menu shadow border-0 rounded-3 p-2" style="min-width: 240px;">
+          <li class="dropdown-header text-uppercase small fw-bold">Popular Delivery Areas</li>
+          <li><a class="dropdown-item rounded-2 py-2" href="#"><i class="bi bi-geo-alt me-2 text-muted"></i>FC Road, Shivajinagar</a></li>
+          <li><a class="dropdown-item rounded-2 py-2" href="#"><i class="bi bi-geo-alt me-2 text-muted"></i>Kothrud, Pune</a></li>
+          <li><a class="dropdown-item rounded-2 py-2" href="#"><i class="bi bi-geo-alt me-2 text-muted"></i>Koregaon Park, Pune</a></li>
+          <li><a class="dropdown-item rounded-2 py-2" href="#"><i class="bi bi-geo-alt me-2 text-muted"></i>Viman Nagar, Pune</a></li>
+          <li><a class="dropdown-item rounded-2 py-2" href="#"><i class="bi bi-geo-alt me-2 text-muted"></i>Hinjewadi Phase 1</a></li>
+          <li><a class="dropdown-item rounded-2 py-2" href="#"><i class="bi bi-geo-alt me-2 text-muted"></i>Baner, Pune</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Search input -->
+    <div class="d-none d-lg-block flex-grow-1 mx-3" style="max-width: 380px;">
+      <%= form_with url: search_path, method: :get, local: true, class: "navbar-search-bar" do |f| %>
+        <i class="bi bi-search"></i>
+        <%= f.text_field :q, value: params[:q], placeholder: "Search for restaurants or food...", aria: { label: "Search food and restaurants" } %>
+      <% end %>
+    </div>
+
+    <!-- Nav links, user menu, cart -->
+    <div class="d-flex align-items-center gap-2">
+      <%= link_to search_path, class: "nav-link-swigy d-lg-none" do %>
+        <i class="bi bi-search"></i>
+      <% end %>
+
+      <%= link_to restaurants_path, class: "nav-link-swigy d-none d-sm-flex" do %>
+        <i class="bi bi-shop"></i>
+        <span>Restaurants</span>
+      <% end %>
+
+      <%= link_to offers_path, class: "nav-link-swigy d-none d-md-flex" do %>
+        <i class="bi bi-percent"></i>
+        <span>Offers</span>
+      <% end %>
+
+      <% if user_signed_in? %>
+        <!-- User dropdown -->
+        <div class="dropdown">
+          <button class="nav-link-swigy bg-transparent border-0 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-circle fs-5 text-secondary"></i>
+            <span class="d-none d-md-inline"><%= current_user.name.presence || current_user.email.split('@').first %></span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-2" style="min-width: 220px;">
+            <li class="px-3 py-2 border-bottom mb-1">
+              <div class="fw-bold text-dark"><%= current_user.name.presence || "Swigy Foodie" %></div>
+              <div class="small text-muted"><%= current_user.email %></div>
+              <% if current_user.admin? %>
+                <span class="badge bg-danger mt-1">Admin</span>
+              <% end %>
+            </li>
+            <li>
+              <%= link_to profile_path, class: "dropdown-item rounded-2 py-2" do %>
+                <i class="bi bi-person me-2 text-muted"></i>My Profile
+              <% end %>
+            </li>
+            <li>
+              <%= link_to orders_path, class: "dropdown-item rounded-2 py-2" do %>
+                <i class="bi bi-bag-check me-2 text-muted"></i>My Orders
+              <% end %>
+            </li>
+
+            <% if current_user.admin? %>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <%= link_to admin_root_path, class: "dropdown-item rounded-2 py-2 text-danger fw-bold" do %>
+                  <i class="bi bi-shield-lock me-2"></i>Admin Console
+                <% end %>
+              </li>
+            <% end %>
+
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <%= button_to destroy_user_session_path, method: :delete, class: "dropdown-item rounded-2 py-2 text-danger border-0 bg-transparent w-100 text-start" do %>
+                <i class="bi bi-box-arrow-right me-2"></i>Log Out
+              <% end %>
+            </li>
+          </ul>
+        </div>
+      <% else %>
+        <%= link_to new_user_session_path, class: "nav-link-swigy" do %>
+          <i class="bi bi-person"></i>
+          <span>Sign In</span>
+        <% end %>
+      <% end %>
+
+      <!-- Cart Button -->
+      <%= link_to cart_path, class: "nav-cart-btn" do %>
+        <i class="bi bi-bag"></i>
+        <span class="d-none d-sm-inline">Cart</span>
+        <span class="cart-count-badge"><%= cart.total_items_count %></span>
+        <% if cart.total_items_count > 0 %>
+          <span class="d-none d-md-inline ms-1 small fw-bold">₹<%= cart.total %></span>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</header>

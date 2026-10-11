@@ -1,0 +1,99 @@
+<div class="container py-4">
+  <div class="mb-4">
+    <h1 class="h3 fw-bold mb-1">My Profile</h1>
+    <p class="text-muted small">Manage your account details and delivery preferences</p>
+  </div>
+
+  <div class="row g-4">
+    <!-- User Info Card -->
+    <div class="col-lg-4">
+      <div class="card border-0 rounded-4 shadow-sm p-4 bg-white text-center mb-4">
+        <div class="mx-auto bg-warning text-white rounded-circle p-3 d-flex align-items-center justify-content-center mb-3 shadow" style="width: 80px; height: 80px;">
+          <i class="bi bi-person-fill fs-1"></i>
+        </div>
+        <h2 class="h5 fw-bold mb-1"><%= @user.name.presence || "Swigy Foodie" %></h2>
+        <p class="text-muted small mb-2"><%= @user.email %></p>
+        <div>
+          <% if @user.admin? %>
+            <span class="badge bg-danger rounded-pill px-3 py-1">Administrator</span>
+          <% else %>
+            <span class="badge bg-warning-subtle text-dark rounded-pill px-3 py-1">Customer Member</span>
+          <% end %>
+        </div>
+
+        <div class="d-flex justify-content-around mt-4 pt-3 border-top">
+          <div>
+            <div class="fs-4 fw-bold text-dark"><%= @total_orders %></div>
+            <div class="small text-muted">Orders</div>
+          </div>
+          <div>
+            <div class="fs-4 fw-bold text-success">₹<%= @total_spent %></div>
+            <div class="small text-muted">Total Spent</div>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <%= link_to edit_profile_path, class: "btn btn-outline-dark btn-sm rounded-pill w-100" do %>
+            <i class="bi bi-pencil me-1"></i> Edit Profile
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Saved Delivery Address -->
+      <div class="card border-0 rounded-4 shadow-sm p-4 bg-white">
+        <h3 class="h6 fw-bold mb-3 d-flex align-items-center gap-2">
+          <i class="bi bi-geo-alt-fill text-warning"></i> Default Delivery Address
+        </h3>
+        <% if @user.address.present? %>
+          <p class="small text-secondary mb-2"><%= @user.address %></p>
+          <div class="small text-muted"><i class="bi bi-telephone me-1"></i><%= @user.phone.presence || "Not specified" %></div>
+        <% else %>
+          <p class="small text-muted mb-3">No default address saved yet.</p>
+          <%= link_to "Add Address", edit_profile_path, class: "btn btn-swigy-outline btn-sm rounded-pill" %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Recent Orders Column -->
+    <div class="col-lg-8">
+      <div class="card border-0 rounded-4 shadow-sm p-4 bg-white">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="h5 fw-bold mb-0">Recent Orders</h2>
+          <%= link_to "View All Orders", orders_path, class: "text-warning small fw-bold text-decoration-none" %>
+        </div>
+
+        <% if @orders.any? %>
+          <div class="d-flex flex-column gap-3">
+            <% @orders.each do |order| %>
+              <div class="p-3 border rounded-3 d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="bg-light p-2 rounded-2 text-center" style="width: 48px; height: 48px;">
+                    <i class="bi bi-receipt fs-4 text-warning"></i>
+                  </div>
+                  <div>
+                    <h3 class="h6 fw-bold mb-0"><%= order.restaurant&.name || "Order ##{order.id}" %></h3>
+                    <div class="small text-muted"><%= order.created_at.strftime("%b %d, %Y") %> • <%= order.items.count %> items</div>
+                  </div>
+                </div>
+
+                <div class="text-end">
+                  <div class="fw-bold mb-1">₹<%= order.total %></div>
+                  <span class="<%= order.status_badge_class %>"><%= order.order_status.titleize %></span>
+                </div>
+
+                <div>
+                  <%= link_to "Details", order_path(order), class: "btn btn-outline-secondary btn-sm rounded-pill px-3" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-4 text-muted">
+            <i class="bi bi-bag-x fs-1 opacity-50 mb-2 d-block"></i>
+            No orders placed yet.
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+<%= form_with model: [:admin, product], local: true do |f| %>
+  <% if product.errors.any? %>
+    <div class="alert alert-danger rounded-3 small">
+      <strong>Please correct the following errors:</strong>
+      <ul class="mb-0">
+        <% product.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <%= f.label :restaurant_id, "Belongs to Restaurant", class: "form-label small fw-bold" %>
+      <%= f.collection_select :restaurant_id, @restaurants, :id, :name, { prompt: "Select Restaurant" }, { class: "form-select rounded-3", required: true } %>
+    </div>
+
+    <div class="col-md-6">
+      <%= f.label :name, "Dish Name", class: "form-label small fw-bold" %>
+      <%= f.text_field :name, class: "form-control rounded-3", required: true, placeholder: "e.g. Butter Chicken" %>
+    </div>
+
+    <div class="col-12">
+      <%= f.label :description, "Description / Ingredients", class: "form-label small fw-bold" %>
+      <%= f.text_area :description, rows: 2, class: "form-control rounded-3", placeholder: "Succulent chicken tikka pieces in a creamy spiced tomato gravy" %>
+    </div>
+
+    <div class="col-md-4">
+      <%= f.label :price, "Price (₹)", class: "form-label small fw-bold" %>
+      <%= f.number_field :price, step: 1, min: 0, class: "form-control rounded-3", required: true, placeholder: "280" %>
+    </div>
+
+    <div class="col-md-4">
+      <%= f.label :category, "Menu Category", class: "form-label small fw-bold" %>
+      <%= f.text_field :category, class: "form-control rounded-3", placeholder: "e.g. Biryani, Main Course, Starters, Desserts" %>
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label small fw-bold d-block">Dietary Type</label>
+      <div class="form-check form-check-inline mt-2">
+        <%= f.radio_button :is_veg, true, class: "form-check-input", id: "veg_radio" %>
+        <%= f.label :is_veg, "Vegetarian", value: true, class: "form-check-label small" %>
+      </div>
+      <div class="form-check form-check-inline mt-2">
+        <%= f.radio_button :is_veg, false, class: "form-check-input", id: "nonveg_radio" %>
+        <%= f.label :is_veg, "Non-Vegetarian", value: false, class: "form-check-label small" %>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <%= f.label :image_url, "Image URL", class: "form-label small fw-bold" %>
+      <%= f.text_field :image_url, class: "form-control rounded-3", placeholder: "https://images.unsplash.com/..." %>
+    </div>
+
+    <div class="col-12">
+      <div class="form-check">
+        <%= f.check_box :available, class: "form-check-input" %>
+        <%= f.label :available, "Available in stock for ordering", class: "form-check-label small fw-bold" %>
+      </div>
+    </div>
+
+    <div class="col-12 mt-4 pt-3 border-top d-flex gap-2">
+      <%= f.submit (product.persisted? ? "Update Dish" : "Create Dish"), class: "btn btn-swigy-primary px-4 py-2" %>
+      <%= link_to "Cancel", admin_products_path, class: "btn btn-light px-4 py-2 rounded-3" %>
+    </div>
+  </div>
+<% end %>
