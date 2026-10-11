@@ -37,8 +37,9 @@
 
             <!-- Items list -->
             <div class="mb-3">
-              <div class="small text-muted mb-2 fw-semibold">Order #SWG-<%= order.id %>:</div>
+              <div class="small text-muted mb-2 fw-semibold">Order #ZGI-<%= order.id %>:</div>
               <ul class="list-unstyled mb-0 small">
+
                 <% order.items.each do |item| %>
                   <li class="d-flex justify-content-between py-1">
                     <span><%= item.product&.name || "Item" %> <span class="text-muted">x <%= item.quantity %></span></span>

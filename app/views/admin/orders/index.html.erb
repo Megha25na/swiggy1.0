@@ -40,8 +40,9 @@
           <% if @orders.any? %>
             <% @orders.each do |order| %>
               <tr>
-                <td><strong>#SWG-<%= order.id %></strong></td>
+                <td><strong>#ZGI-<%= order.id %></strong></td>
                 <td><span class="small text-muted"><%= order.created_at.strftime("%b %d, %H:%M") %></span></td>
+
                 <td>
                   <div class="fw-semibold small"><%= order.customer_name %></div>
                   <div class="small text-muted"><%= order.contact_phone %></div>

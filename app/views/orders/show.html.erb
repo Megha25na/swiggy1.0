@@ -4,7 +4,7 @@
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><%= link_to "Home", root_path, class: "text-muted" %></li>
       <li class="breadcrumb-item"><%= link_to "My Orders", orders_path, class: "text-muted" %></li>
-      <li class="breadcrumb-item active fw-bold text-dark">Order #SWG-<%= @order.id %></li>
+      <li class="breadcrumb-item active fw-bold text-dark">Order #ZGI-<%= @order.id %></li>
     </ol>
   </nav>
 
@@ -13,7 +13,7 @@
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
       <div>
         <div class="d-flex align-items-center gap-2 mb-1">
-          <h1 class="h3 fw-bold mb-0">Order #SWG-<%= @order.id %></h1>
+          <h1 class="h3 fw-bold mb-0">Order #ZGI-<%= @order.id %></h1>
           <span class="<%= @order.status_badge_class %>">
             <%= @order.order_status.titleize %>
           </span>
@@ -45,8 +45,9 @@
             <i class="bi <%= current_step > 1 ? 'bi-check-lg' : 'bi-receipt' %>"></i>
           </div>
           <div class="step-label">Order Placed</div>
-          <div class="step-subtext">Received by Swigy</div>
+          <div class="step-subtext">Received by Zigi</div>
         </div>
+
 
         <!-- Step 2: Confirmed -->
         <div class="tracking-step <%= 'completed' if current_step > 2 %> <%= 'current' if current_step == 2 %>">

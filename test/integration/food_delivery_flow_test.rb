@@ -67,8 +67,9 @@ class FoodDeliveryFlowTest < ActionDispatch::IntegrationTest
     assert_redirected_to order_url(order)
     follow_redirect!
     assert_response :success
-    assert_select "h1", text: /Order #SWG-#{order.id}/
+    assert_select "h1", text: /Order #ZGI-#{order.id}/
     assert_select ".step-label", text: "Order Placed"
+
 
     # 10. View Order history
     get orders_url

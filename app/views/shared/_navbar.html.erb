@@ -3,9 +3,10 @@
     <!-- Brand & Location -->
     <div class="d-flex align-items-center gap-3">
       <%= link_to root_path, class: "brand-logo" do %>
-        <span>Swigy</span>
+        <span>Zigi</span>
         <span class="logo-badge"><i class="bi bi-bicycle"></i></span>
       <% end %>
+
 
       <!-- Location dropdown -->
       <div class="dropdown d-none d-md-block">
@@ -59,8 +60,9 @@
           </button>
           <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 p-2" style="min-width: 220px;">
             <li class="px-3 py-2 border-bottom mb-1">
-              <div class="fw-bold text-dark"><%= current_user.name.presence || "Swigy Foodie" %></div>
+              <div class="fw-bold text-dark"><%= current_user.name.presence || "Zigi Foodie" %></div>
               <div class="small text-muted"><%= current_user.email %></div>
+
               <% if current_user.admin? %>
                 <span class="badge bg-danger mt-1">Admin</span>
               <% end %>

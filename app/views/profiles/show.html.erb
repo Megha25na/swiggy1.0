@@ -11,8 +11,9 @@
         <div class="mx-auto bg-warning text-white rounded-circle p-3 d-flex align-items-center justify-content-center mb-3 shadow" style="width: 80px; height: 80px;">
           <i class="bi bi-person-fill fs-1"></i>
         </div>
-        <h2 class="h5 fw-bold mb-1"><%= @user.name.presence || "Swigy Foodie" %></h2>
+        <h2 class="h5 fw-bold mb-1"><%= @user.name.presence || "Zigi Foodie" %></h2>
         <p class="text-muted small mb-2"><%= @user.email %></p>
+
         <div>
           <% if @user.admin? %>
             <span class="badge bg-danger rounded-pill px-3 py-1">Administrator</span>

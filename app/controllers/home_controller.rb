@@ -41,8 +41,9 @@ class HomeController < ApplicationController
   def offers
     @restaurants = Restaurant.all.limit(9)
     @promo_codes = [
-      { code: "SWIGY50", discount: "50% OFF up to ₹100", min_order: "Above ₹199", bg: "#FC8019" },
+      { code: "ZIGI50", discount: "50% OFF up to ₹100", min_order: "Above ₹199", bg: "#FC8019" },
       { code: "FEAST120", discount: "Flat ₹120 OFF", min_order: "Above ₹399", bg: "#60B246" },
+
       { code: "FREEDEL", discount: "FREE Delivery", min_order: "Above ₹149", bg: "#2B39B9" },
       { code: "TRYNEW", discount: "60% OFF on First Order", min_order: "No min order", bg: "#E43B4F" }
     ]

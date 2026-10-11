@@ -1,7 +1,8 @@
-# Realistic seed data for Swigy Food Delivery Platform
+# Realistic seed data for Zigi Food Delivery Platform
 # Uses find_or_create_by to preserve existing data idempotently.
 
-puts "== Seeding Swigy database =="
+puts "== Seeding Zigi database =="
+
 
 # 1. Users
 admin_user = User.find_by(email: "rahulgawade2006@gmail.com")
