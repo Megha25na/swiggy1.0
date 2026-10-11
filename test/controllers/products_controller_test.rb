@@ -5,44 +5,23 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
     @product = products(:one)
   end
 
-  test "should get index" do
+  test "guest can get products index" do
     get products_url
     assert_response :success
   end
 
-  test "should get new" do
-    get new_product_url
+  test "guest can filter products by search query" do
+    get products_url, params: { q: "Biryani" }
     assert_response :success
   end
 
-  test "should create product" do
-    assert_difference("Product.count") do
-      post products_url, params: { product: { description: @product.description, is_veg: @product.is_veg, name: @product.name, price: @product.price, restaurant_id: @product.restaurant_id } }
-    end
-
-    assert_redirected_to product_url(Product.last)
+  test "guest can filter products by veg" do
+    get products_url, params: { veg_only: "true" }
+    assert_response :success
   end
 
-  test "should show product" do
+  test "guest can show product" do
     get product_url(@product)
     assert_response :success
-  end
-
-  test "should get edit" do
-    get edit_product_url(@product)
-    assert_response :success
-  end
-
-  test "should update product" do
-    patch product_url(@product), params: { product: { description: @product.description, is_veg: @product.is_veg, name: @product.name, price: @product.price, restaurant_id: @product.restaurant_id } }
-    assert_redirected_to product_url(@product)
-  end
-
-  test "should destroy product" do
-    assert_difference("Product.count", -1) do
-      delete product_url(@product)
-    end
-
-    assert_redirected_to products_url
   end
 end

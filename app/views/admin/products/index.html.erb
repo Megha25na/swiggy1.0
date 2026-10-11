@@ -1,0 +1,87 @@
+<div class="container py-4">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 pb-3 border-bottom">
+    <div>
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <%= link_to "Admin Console", admin_root_path, class: "text-muted small text-decoration-none" %>
+        <i class="bi bi-chevron-right text-muted small"></i>
+        <h1 class="h3 fw-bold mb-0">Menu Items Catalog</h1>
+      </div>
+      <p class="text-muted small mb-0">Manage dishes, recipes, pricing, categories, and stock availability</p>
+    </div>
+
+    <div>
+      <%= link_to new_admin_product_path, class: "btn btn-swigy-primary rounded-pill px-4" do %>
+        <i class="bi bi-plus-lg me-1"></i> Add New Dish
+      <% end %>
+    </div>
+  </div>
+
+  <div class="card border-0 rounded-4 shadow-sm bg-white overflow-hidden">
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead class="table-light small">
+          <tr>
+            <th>Dish</th>
+            <th>Restaurant</th>
+            <th>Category</th>
+            <th>Type</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @products.any? %>
+            <% @products.each do |product| %>
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center gap-3">
+                    <img src="<%= product.display_image %>" alt="<%= product.name %>" class="rounded-3" style="width: 48px; height: 48px; object-fit: cover;">
+                    <div>
+                      <div class="fw-bold"><%= product.name %></div>
+                      <div class="small text-muted text-truncate" style="max-width: 250px;"><%= product.description %></div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="small fw-semibold"><%= product.restaurant&.name || "None" %></span>
+                </td>
+                <td><span class="badge bg-light text-dark border"><%= product.category.presence || "General" %></span></td>
+                <td>
+                  <span class="food-type-icon <%= product.is_veg? ? 'veg' : 'non-veg' %>"></span>
+                </td>
+                <td><strong class="text-dark">₹<%= product.price %></strong></td>
+                <td>
+                  <% if product.available? %>
+                    <span class="badge bg-success-subtle text-success">Available</span>
+                  <% else %>
+                    <span class="badge bg-danger-subtle text-danger">Out of Stock</span>
+                  <% end %>
+                </td>
+                <td class="text-end">
+                  <div class="d-inline-flex gap-1">
+                    <%= link_to product_path(product), class: "btn btn-sm btn-light border", title: "View" do %>
+                      <i class="bi bi-eye"></i>
+                    <% end %>
+                    <%= link_to edit_admin_product_path(product), class: "btn btn-sm btn-light border text-primary", title: "Edit" do %>
+                      <i class="bi bi-pencil"></i>
+                    <% end %>
+                    <%= button_to admin_product_path(product), method: :delete, class: "btn btn-sm btn-light border text-danger", title: "Delete", data: { turbo_confirm: "Are you sure you want to delete '#{product.name}'?" } do %>
+                      <i class="bi bi-trash3"></i>
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="7" class="text-center py-4 text-muted">
+                No menu items created yet. Click "Add New Dish" to add one!
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

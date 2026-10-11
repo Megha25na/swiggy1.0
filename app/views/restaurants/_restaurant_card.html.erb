@@ -1,0 +1,42 @@
+<div class="col-12 col-sm-6 col-lg-3">
+  <%= link_to restaurant_path(restaurant), class: "restaurant-card text-decoration-none" do %>
+    <div class="restaurant-img-wrap">
+      <img src="<%= restaurant.display_image %>" alt="<%= restaurant.name %>" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80'">
+      
+      <% if restaurant.pure_veg? %>
+        <span class="restaurant-badge-veg"><i class="bi bi-patch-check-fill me-1"></i>PURE VEG</span>
+      <% end %>
+
+      <div class="restaurant-badge-offer">
+        <i class="bi bi-tag-fill text-warning"></i>
+        <span>50% OFF UP TO ₹100</span>
+      </div>
+    </div>
+
+    <div class="restaurant-content">
+      <h3 class="restaurant-name h5 mb-1"><%= restaurant.name %></h3>
+
+      <div class="restaurant-meta-row">
+        <span class="rating-badge <%= 'rating-average' if restaurant.rating.to_f < 4.0 %>">
+          <i class="bi bi-star-fill" style="font-size: 0.65rem;"></i>
+          <span><%= sprintf("%.1f", restaurant.rating || 4.2) %></span>
+        </span>
+        <span class="meta-dot"></span>
+        <span class="meta-time"><i class="bi bi-clock me-1 text-muted"></i><%= restaurant.delivery_time.presence || "25-35 mins" %></span>
+      </div>
+
+      <div class="restaurant-cuisine">
+        <%= restaurant.cuisine.presence || "Multi-Cuisine, Fast Food" %>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-2 pt-2 border-top border-light">
+        <div class="restaurant-location text-truncate" style="max-width: 140px;">
+          <i class="bi bi-geo-alt me-1 text-secondary"></i><%= restaurant.address.presence || restaurant.city.presence || "Pune" %>
+        </div>
+        <div class="meta-price small fw-bold">
+          ₹<%= restaurant.price_for_two || 350 %> for two
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

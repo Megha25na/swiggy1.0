@@ -1,0 +1,83 @@
+<%= form_with model: [:admin, restaurant], local: true do |f| %>
+  <% if restaurant.errors.any? %>
+    <div class="alert alert-danger rounded-3 small">
+      <strong>Please fix the following issues:</strong>
+      <ul class="mb-0">
+        <% restaurant.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <%= f.label :name, "Restaurant Name", class: "form-label small fw-bold" %>
+      <%= f.text_field :name, class: "form-control rounded-3", required: true, placeholder: "e.g. Royal Biryani House" %>
+    </div>
+
+    <div class="col-md-6">
+      <%= f.label :cuisine, "Cuisine Categories (comma separated)", class: "form-label small fw-bold" %>
+      <%= f.text_field :cuisine, class: "form-control rounded-3", placeholder: "e.g. Biryani, North Indian, Mughlai" %>
+    </div>
+
+    <div class="col-12">
+      <%= f.label :description, "About / Description", class: "form-label small fw-bold" %>
+      <%= f.text_area :description, rows: 2, class: "form-control rounded-3", placeholder: "Authentic dum biryani, kebabs, and tandoori specialties" %>
+    </div>
+
+    <div class="col-md-3">
+      <%= f.label :rating, "Rating (0.0 to 5.0)", class: "form-label small fw-bold" %>
+      <%= f.number_field :rating, step: 0.1, min: 1.0, max: 5.0, class: "form-control rounded-3" %>
+    </div>
+
+    <div class="col-md-3">
+      <%= f.label :delivery_time, "Estimated Delivery Time", class: "form-label small fw-bold" %>
+      <%= f.text_field :delivery_time, class: "form-control rounded-3", placeholder: "25-30 mins" %>
+    </div>
+
+    <div class="col-md-3">
+      <%= f.label :price_for_two, "Cost for Two (₹)", class: "form-label small fw-bold" %>
+      <%= f.number_field :price_for_two, class: "form-control rounded-3", placeholder: "350" %>
+    </div>
+
+    <div class="col-md-3">
+      <%= f.label :phone, "Contact Phone", class: "form-label small fw-bold" %>
+      <%= f.telephone_field :phone, class: "form-control rounded-3", placeholder: "9876543210" %>
+    </div>
+
+    <div class="col-md-8">
+      <%= f.label :address, "Street Address", class: "form-label small fw-bold" %>
+      <%= f.text_field :address, class: "form-control rounded-3", placeholder: "Shop 4, Ferguson College Road" %>
+    </div>
+
+    <div class="col-md-4">
+      <%= f.label :city, "City", class: "form-label small fw-bold" %>
+      <%= f.text_field :city, class: "form-control rounded-3", value: restaurant.city.presence || "Pune" %>
+    </div>
+
+    <div class="col-12">
+      <%= f.label :image_url, "Image URL", class: "form-label small fw-bold" %>
+      <%= f.text_field :image_url, class: "form-control rounded-3", placeholder: "https://images.unsplash.com/..." %>
+    </div>
+
+    <div class="col-12">
+      <div class="d-flex gap-4">
+        <div class="form-check">
+          <%= f.check_box :pure_veg, class: "form-check-input" %>
+          <%= f.label :pure_veg, "100% Pure Vegetarian Restaurant", class: "form-check-label small fw-bold" %>
+        </div>
+
+        <div class="form-check">
+          <%= f.check_box :featured, class: "form-check-input" %>
+          <%= f.label :featured, "Feature on Homepage", class: "form-check-label small fw-bold" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 mt-4 pt-3 border-top d-flex gap-2">
+      <%= f.submit (restaurant.persisted? ? "Update Restaurant" : "Create Restaurant"), class: "btn btn-swigy-primary px-4 py-2" %>
+      <%= link_to "Cancel", admin_restaurants_path, class: "btn btn-light px-4 py-2 rounded-3" %>
+    </div>
+  </div>
+<% end %>

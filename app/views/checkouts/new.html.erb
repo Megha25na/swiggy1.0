@@ -1,0 +1,152 @@
+<div class="container py-4">
+  <div class="mb-4">
+    <h1 class="h3 fw-bold mb-1">Checkout & Delivery Details</h1>
+    <p class="text-muted small">Confirm your delivery location and payment method</p>
+  </div>
+
+  <%= form_with url: checkout_path, method: :post, local: true do |f| %>
+    <div class="row g-4">
+      <!-- Left Column: Address, Instructions & Payment -->
+      <div class="col-lg-7">
+        <!-- 1. Delivery Address Card -->
+        <div class="card border-0 rounded-4 shadow-sm p-4 bg-white mb-4">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <span class="bg-warning text-dark rounded-circle p-2 d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+              <i class="bi bi-geo-alt-fill"></i>
+            </span>
+            <h2 class="h5 fw-bold mb-0">1. Delivery Address</h2>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Full Name</label>
+            <%= f.text_field :customer_name, value: @customer_name, required: true, class: "form-control rounded-3" %>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Delivery Address (House / Flat, Street, Area)</label>
+            <%= f.text_area :delivery_address, value: @delivery_address, required: true, rows: 3, class: "form-control rounded-3" %>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <label class="form-label small fw-bold">Contact Phone Number</label>
+              <%= f.telephone_field :contact_phone, value: @contact_phone, required: true, class: "form-control rounded-3" %>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label small fw-bold">Delivery Instructions (Optional)</label>
+              <%= f.text_field :notes, placeholder: "E.g. Avoid doorbell, leave at door", class: "form-control rounded-3" %>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Payment Method Card -->
+        <div class="card border-0 rounded-4 shadow-sm p-4 bg-white">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <span class="bg-warning text-dark rounded-circle p-2 d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+              <i class="bi bi-credit-card"></i>
+            </span>
+            <h2 class="h5 fw-bold mb-0">2. Payment Method</h2>
+          </div>
+
+          <!-- Demo Payment Banner -->
+          <div class="alert alert-info border-0 rounded-3 d-flex align-items-center gap-2 mb-3 py-2 px-3 small">
+            <i class="bi bi-info-circle-fill fs-5 text-primary"></i>
+            <div>
+              <strong>Demo Checkout Simulation:</strong> Real payment gateways are not configured. You can test ordering safely without real money.
+            </div>
+          </div>
+
+          <div class="d-flex flex-column gap-3">
+            <div class="border rounded-3 p-3 d-flex align-items-center justify-content-between">
+              <div class="form-check d-flex align-items-center gap-2 mb-0">
+                <input class="form-check-input mt-0" type="radio" name="payment_method" id="pay_cod" value="Cash on Delivery" checked>
+                <label class="form-check-label fw-bold text-dark" for="pay_cod">
+                  Cash on Delivery / Pay on Delivery
+                </label>
+              </div>
+              <span class="badge bg-light text-muted border"><i class="bi bi-cash-stack text-success me-1"></i>Cash / UPI at door</span>
+            </div>
+
+            <div class="border rounded-3 p-3 d-flex align-items-center justify-content-between">
+              <div class="form-check d-flex align-items-center gap-2 mb-0">
+                <input class="form-check-input mt-0" type="radio" name="payment_method" id="pay_upi" value="Demo UPI (GooglePay / PhonePe)">
+                <label class="form-check-label fw-bold text-dark" for="pay_upi">
+                  Demo UPI (Instant Approval)
+                </label>
+              </div>
+              <span class="badge bg-light text-muted border"><i class="bi bi-qr-code text-primary me-1"></i>GPay / PhonePe</span>
+            </div>
+
+            <div class="border rounded-3 p-3 d-flex align-items-center justify-content-between">
+              <div class="form-check d-flex align-items-center gap-2 mb-0">
+                <input class="form-check-input mt-0" type="radio" name="payment_method" id="pay_card" value="Demo Card / Netbanking">
+                <label class="form-check-label fw-bold text-dark" for="pay_card">
+                  Demo Credit / Debit Card
+                </label>
+              </div>
+              <span class="badge bg-light text-muted border"><i class="bi bi-credit-card-2-front text-warning me-1"></i>Visa / Mastercard</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Order Summary & Place Order -->
+      <div class="col-lg-5">
+        <div class="card border-0 rounded-4 shadow-sm p-4 bg-white sticky-top" style="top: 90px;">
+          <% if @restaurant.present? %>
+            <div class="d-flex align-items-center gap-3 pb-3 border-bottom mb-3">
+              <img src="<%= @restaurant.display_image %>" alt="<%= @restaurant.name %>" class="rounded-3" style="width: 50px; height: 50px; object-fit: cover;">
+              <div>
+                <h3 class="h6 fw-bold mb-0"><%= @restaurant.name %></h3>
+                <div class="text-muted small"><%= @restaurant.address.presence || @restaurant.city.presence || "Pune" %></div>
+              </div>
+            </div>
+          <% end %>
+
+          <h3 class="h6 fw-bold mb-3">Items Ordered (<%= cart.total_items_count %>)</h3>
+
+          <div class="d-flex flex-column gap-2 mb-3" style="max-height: 220px; overflow-y: auto;">
+            <% cart.items.each do |item| %>
+              <div class="d-flex justify-content-between align-items-center small">
+                <div class="d-flex align-items-center gap-2 text-truncate" style="max-width: 220px;">
+                  <span class="food-type-icon <%= item.product.is_veg? ? 'veg' : 'non-veg' %>" style="width: 10px; height: 10px; margin-bottom: 0;"></span>
+                  <span class="text-dark fw-semibold text-truncate"><%= item.product.name %></span>
+                  <span class="text-muted">x <%= item.quantity %></span>
+                </div>
+                <span class="fw-bold">₹<%= item.line_total %></span>
+              </div>
+            <% end %>
+          </div>
+
+          <div class="border-top pt-3">
+            <div class="bill-row">
+              <span>Item Subtotal</span>
+              <span>₹<%= cart.subtotal %></span>
+            </div>
+            <div class="bill-row">
+              <span>Delivery Fee</span>
+              <span><%= cart.delivery_fee == 0 ? '<span class="text-success fw-bold">FREE</span>'.html_safe : "₹#{cart.delivery_fee}" %></span>
+            </div>
+            <div class="bill-row">
+              <span>GST & Taxes (5%)</span>
+              <span>₹<%= cart.tax %></span>
+            </div>
+            <div class="bill-row total-row">
+              <span>Amount Payable</span>
+              <span class="text-warning">₹<%= cart.total %></span>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <button type="submit" class="btn btn-swigy-primary w-100 py-3 fw-bold fs-6">
+              Place Order • ₹<%= cart.total %> <i class="bi bi-arrow-right ms-1"></i>
+            </button>
+            <div class="text-center small text-muted mt-2">
+              <i class="bi bi-shield-lock text-success me-1"></i> By placing order you agree to Swigy terms.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

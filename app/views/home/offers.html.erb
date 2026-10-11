@@ -1,0 +1,36 @@
+<div class="container py-4">
+  <div class="mb-4">
+    <span class="badge bg-danger px-3 py-2 rounded-pill fw-bold mb-2">MEGA DISCOUNTS</span>
+    <h1 class="h2 fw-bold">Restaurants with Great Offers & Deals</h1>
+    <p class="text-muted">Save more on every order with exciting coupons and partner restaurant discounts</p>
+  </div>
+
+  <!-- Coupon Code Cards -->
+  <div class="row g-3 mb-5">
+    <% @promo_codes.each do |promo| %>
+      <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card h-100 border-0 rounded-4 shadow-sm p-3 text-white" style="background-color: <%= promo[:bg] %>;">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge bg-white text-dark fw-bold"><%= promo[:code] %></span>
+            <i class="bi bi-tag-fill fs-5"></i>
+          </div>
+          <h3 class="h5 fw-bold mb-1"><%= promo[:discount] %></h3>
+          <p class="small text-white-50 mb-3"><%= promo[:min_order] %></p>
+          <div class="mt-auto">
+            <button class="btn btn-sm btn-light fw-bold text-dark w-100 rounded-pill" onclick="navigator.clipboard.writeText('<%= promo[:code] %>'); alert('Coupon <%= promo[:code] %> copied!');">
+              Copy Code
+            </button>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Qualifying Restaurants -->
+  <h2 class="h4 fw-bold mb-3">All Offer Restaurants</h2>
+  <div class="row g-4">
+    <% @restaurants.each do |restaurant| %>
+      <%= render partial: "restaurants/restaurant_card", locals: { restaurant: restaurant } %>
+    <% end %>
+  </div>
+</div>

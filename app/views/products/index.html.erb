@@ -1,38 +1,68 @@
-
-<p style="color: green"><%= notice %></p>
-
-<div class="container py-5">
-
-  <!-- Page Heading -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="container py-4">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
     <div>
-      <h1 class="fw-bold">Discover Delicious Food</h1>
-      <p class="text-muted">Order your favourites from our restaurants.</p>
+      <h1 class="h3 fw-bold mb-1">Discover Delicious Dishes</h1>
+      <p class="text-muted small mb-0">Browse through the most popular items curated for you</p>
     </div>
 
-    <div>
-
-    <%= link_to "🛒 View Cart", "#",
-        class: "btn btn-outline-warning" %>
-    <%= link_to "Log Out", destroy_user_session_path, data: { turbo_method: :delete }, class: "btn btn-outline-danger" %>
-
-
+    <!-- Search in dishes -->
+    <div style="min-width: 280px;">
+      <%= form_with url: products_path, method: :get, local: true, class: "position-relative" do |f| %>
+        <i class="bi bi-search position-absolute text-muted" style="left: 14px; top: 11px;"></i>
+        <%= f.text_field :q, value: params[:q], placeholder: "Search dishes...", class: "form-control rounded-pill ps-5", aria: { label: "Search dishes" } %>
+      <% end %>
+    </div>
   </div>
-  </div>
 
-  <!-- Product Grid: 3 Cards Per Row -->
-  <div class="row g-4">
-
-    <% @products.each do |product| %>
-        <%= render partial: "product", locals: { product: product } %>
+  <!-- Filter chips -->
+  <div class="filter-bar">
+    <%= link_to "All Dishes", products_path, class: "filter-pill #{'active' unless params[:veg_only].present? || params[:category].present?}" %>
+    
+    <%= link_to products_path(veg_only: (params[:veg_only] == 'true' ? nil : 'true'), category: params[:category]), class: "filter-pill #{'active' if params[:veg_only] == 'true'}" do %>
+      <span class="food-type-icon veg me-1" style="width: 12px; height: 12px; margin-bottom: 0;"></span> Veg Only
     <% end %>
 
+    <% @categories.each do |cat| %>
+      <%= link_to cat, products_path(category: cat, veg_only: params[:veg_only]), class: "filter-pill #{'active' if params[:category] == cat}" %>
+    <% end %>
   </div>
 
-  <% if @products.empty? %>
-    <div class="alert alert-info mt-4">
-      No products available yet. Add some products to get started!
-    </div>
-  <% end %>
+  <!-- Dishes Grid -->
+  <div class="row g-3">
+    <% if @products.any? %>
+      <% @products.each do |product| %>
+        <div class="col-md-6 col-lg-4">
+          <div class="dish-card h-100">
+            <div class="dish-info">
+              <div class="food-type-icon <%= product.is_veg? ? 'veg' : 'non-veg' %>"></div>
+              <h2 class="dish-title h6 mb-1"><%= link_to product.name, product_path(product), class: "text-decoration-none text-dark" %></h2>
+              <div class="dish-price">₹<%= product.price %></div>
+              <% if product.restaurant.present? %>
+                <div class="small text-muted mb-2">
+                  <i class="bi bi-shop me-1"></i><%= link_to product.restaurant.name, restaurant_path(product.restaurant), class: "text-secondary text-decoration-none fw-semibold" %>
+                </div>
+              <% end %>
+              <p class="dish-description"><%= product.description %></p>
+            </div>
 
+            <div class="dish-action">
+              <img src="<%= product.display_image %>" alt="<%= product.name %>" class="dish-img" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80'">
+              <%= button_to add_item_cart_path(product_id: product.id), method: :post, class: "dish-add-btn" do %>
+                ADD +
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="col-12 py-5 text-center">
+        <div class="p-5 bg-white rounded-4 border">
+          <i class="bi bi-egg-fried fs-1 text-muted mb-2 d-block"></i>
+          <h4 class="fw-bold">No dishes found</h4>
+          <p class="text-muted small">Try clearing your filters or search keywords.</p>
+          <%= link_to "Show All Dishes", products_path, class: "btn btn-swigy-primary rounded-pill px-4" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>

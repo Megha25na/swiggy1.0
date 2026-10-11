@@ -1,10 +1,234 @@
-<p style="color: green"><%= notice %></p>
+<div class="container py-4">
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="mb-3 small">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><%= link_to "Home", root_path, class: "text-muted" %></li>
+      <li class="breadcrumb-item"><%= link_to "Restaurants", restaurants_path, class: "text-muted" %></li>
+      <li class="breadcrumb-item active fw-bold text-dark" aria-current="page"><%= @restaurant.name %></li>
+    </ol>
+  </nav>
 
-<%= render @restaurant %>
+  <!-- Restaurant Header Card -->
+  <div class="card border-0 rounded-4 shadow-sm p-4 mb-4 bg-white">
+    <div class="row align-items-center g-4">
+      <div class="col-md-8">
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <h1 class="h2 fw-bold text-dark mb-0"><%= @restaurant.name %></h1>
+          <% if @restaurant.pure_veg? %>
+            <span class="badge bg-success small"><i class="bi bi-patch-check-fill me-1"></i>Pure Veg</span>
+          <% end %>
+        </div>
 
-<div>
-  <%= link_to "Edit this restaurant", edit_restaurant_path(@restaurant) %> |
-  <%= link_to "Back to restaurants", restaurants_path %>
+        <p class="text-muted mb-2"><%= @restaurant.cuisine.presence || "Multi-Cuisine" %></p>
+        <p class="text-muted small mb-3">
+          <i class="bi bi-geo-alt me-1 text-secondary"></i><%= @restaurant.address.presence || @restaurant.city.presence || "Pune" %>
+          <% if @restaurant.phone.present? %>
+            <span class="ms-3"><i class="bi bi-telephone me-1 text-secondary"></i><%= @restaurant.phone %></span>
+          <% end %>
+        </p>
 
-  <%= button_to "Destroy this restaurant", @restaurant, method: :delete %>
+        <!-- Quick Info Pills -->
+        <div class="d-flex flex-wrap align-items-center gap-3 pt-3 border-top">
+          <div class="d-flex align-items-center gap-2">
+            <span class="rating-badge <%= 'rating-average' if @restaurant.rating.to_f < 4.0 %>">
+              <i class="bi bi-star-fill" style="font-size: 0.7rem;"></i>
+              <span><%= sprintf("%.1f", @restaurant.rating || 4.2) %></span>
+            </span>
+            <span class="small text-muted fw-semibold">1,000+ ratings</span>
+          </div>
+
+          <span class="meta-dot"></span>
+
+          <div class="small fw-bold text-dark">
+            <i class="bi bi-clock me-1 text-warning"></i><%= @restaurant.delivery_time.presence || "25-30 mins" %>
+          </div>
+
+          <span class="meta-dot"></span>
+
+          <div class="small fw-bold text-dark">
+            <i class="bi bi-wallet2 me-1 text-success"></i>₹<%= @restaurant.price_for_two || 350 %> for two
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 text-center">
+        <img src="<%= @restaurant.display_image %>" 
+             alt="<%= @restaurant.name %>" 
+             class="img-fluid rounded-4 shadow-sm"
+             style="height: 180px; width: 100%; object-fit: cover;"
+             onerror="this.src='https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80'">
+      </div>
+    </div>
+
+    <!-- Deals Strip -->
+    <div class="row g-2 mt-3 pt-3 border-top">
+      <div class="col-sm-6">
+        <div class="p-2 px-3 rounded-3 d-flex align-items-center gap-2 border" style="background-color: #FFF6EE; border-color: rgba(252, 128, 25, 0.2) !important;">
+          <i class="bi bi-percent fs-5 text-warning"></i>
+          <div>
+            <div class="small fw-bold text-dark">50% OFF up to ₹100</div>
+            <div class="text-muted" style="font-size: 0.72rem;">Use code SWIGY50 | Above ₹199</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="p-2 px-3 rounded-3 d-flex align-items-center gap-2 border" style="background-color: #F0FDF4; border-color: rgba(15, 138, 101, 0.2) !important;">
+          <i class="bi bi-bicycle fs-5 text-success"></i>
+          <div>
+            <div class="small fw-bold text-dark">Free Delivery</div>
+            <div class="text-muted" style="font-size: 0.72rem;">On orders above ₹500</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search & Veg Toggle Filter inside Menu -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 p-3 bg-white rounded-3 shadow-sm border">
+    <div class="d-flex align-items-center gap-3">
+      <!-- Veg Only Toggle -->
+      <div class="form-check form-switch mb-0">
+        <%= link_to restaurant_path(@restaurant, veg_only: (params[:veg_only] == 'true' ? nil : 'true'), search: params[:search]), class: "text-decoration-none d-flex align-items-center gap-2" do %>
+          <input class="form-check-input" type="checkbox" role="switch" id="vegSwitch" <%= 'checked' if params[:veg_only] == 'true' %> style="cursor: pointer;">
+          <label class="form-check-label small fw-bold text-dark" for="vegSwitch" style="cursor: pointer;">
+            <span class="food-type-icon veg" style="width: 12px; height: 12px; margin-bottom: 0;"></span> Veg Only
+          </label>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Search in Menu -->
+    <div style="min-width: 260px;">
+      <%= form_with url: restaurant_path(@restaurant), method: :get, local: true, class: "position-relative" do |f| %>
+        <%= f.hidden_field :veg_only, value: params[:veg_only] if params[:veg_only].present? %>
+        <i class="bi bi-search position-absolute text-muted" style="left: 12px; top: 10px;"></i>
+        <%= f.text_field :search, value: params[:search], placeholder: "Search in menu...", class: "form-control form-control-sm rounded-pill ps-5", aria: { label: "Search dish in menu" } %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Main Menu Grid + Cart Sidebar -->
+  <div class="row g-4">
+    <!-- Menu Dishes Column -->
+    <div class="col-lg-8">
+      <% if @products_by_category.any? %>
+        <% @products_by_category.each do |category_name, products| %>
+          <div class="mb-5" id="category-<%= category_name.parameterize %>">
+            <h2 class="h5 fw-bold mb-3 d-flex align-items-center justify-content-between border-bottom pb-2">
+              <span><%= category_name %></span>
+              <span class="badge bg-light text-muted fw-normal fs-6"><%= products.count %></span>
+            </h2>
+
+            <div class="d-flex flex-column gap-3">
+              <% products.each do |product| %>
+                <div class="dish-card">
+                  <div class="dish-info">
+                    <div class="food-type-icon <%= product.is_veg? ? 'veg' : 'non-veg' %>"></div>
+                    <h3 class="dish-title"><%= product.name %></h3>
+                    <div class="dish-price">₹<%= product.price %></div>
+                    <p class="dish-description"><%= product.description %></p>
+                  </div>
+
+                  <div class="dish-action">
+                    <img src="<%= product.display_image %>" alt="<%= product.name %>" class="dish-img" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80'">
+
+                    <!-- Add or Stepper Button -->
+                    <% cart_item_qty = cart.raw_items[product.id.to_s].to_i %>
+                    <% if cart_item_qty > 0 %>
+                      <div class="qty-stepper dish-add-btn p-0">
+                        <%= button_to update_quantity_cart_path(product_id: product.id, quantity: cart_item_qty - 1), method: :patch, class: "border-0 bg-transparent text-success fw-bold px-2" do %>-<% end %>
+                        <span class="qty-val"><%= cart_item_qty %></span>
+                        <%= button_to update_quantity_cart_path(product_id: product.id, quantity: cart_item_qty + 1), method: :patch, class: "border-0 bg-transparent text-success fw-bold px-2" do %>+<% end %>
+                      </div>
+                    <% else %>
+                      <%= button_to add_item_cart_path(product_id: product.id), method: :post, class: "dish-add-btn" do %>
+                        ADD +
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="p-5 text-center bg-white rounded-4 border">
+          <i class="bi bi-egg-fried fs-1 text-muted mb-2 d-block"></i>
+          <h4 class="fw-bold">No dishes found</h4>
+          <p class="text-muted small">Try clearing your search or veg filter.</p>
+          <%= link_to "View Full Menu", restaurant_path(@restaurant), class: "btn btn-swigy-outline btn-sm rounded-pill" %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Desktop Cart Sidebar -->
+    <div class="col-lg-4 d-none d-lg-block">
+      <div class="card border-0 rounded-4 shadow-sm p-3 bg-white sticky-top" style="top: 90px;">
+        <h3 class="h5 fw-bold mb-3 d-flex align-items-center justify-content-between">
+          <span><i class="bi bi-bag-check me-2 text-warning"></i>Your Cart</span>
+          <span class="badge bg-warning-subtle text-dark"><%= cart.total_items_count %> items</span>
+        </h3>
+
+        <% if cart.items.any? %>
+          <% if cart.restaurant && cart.restaurant.id != @restaurant.id %>
+            <div class="alert alert-warning small py-2 mb-3">
+              <i class="bi bi-info-circle me-1"></i> Cart has items from <strong><%= cart.restaurant.name %></strong>. Adding items from here will start a new cart.
+            </div>
+          <% end %>
+
+          <!-- Cart items list -->
+          <div class="cart-items-scroll mb-3" style="max-height: 280px; overflow-y: auto;">
+            <% cart.items.each do |item| %>
+              <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
+                <div class="d-flex align-items-center gap-2 text-truncate" style="max-width: 170px;">
+                  <span class="food-type-icon <%= item.product.is_veg? ? 'veg' : 'non-veg' %>" style="width: 12px; height: 12px; margin-bottom: 0;"></span>
+                  <span class="small fw-semibold text-truncate"><%= item.product.name %></span>
+                </div>
+
+                <div class="qty-stepper scale-75">
+                  <%= button_to update_quantity_cart_path(product_id: item.product.id, quantity: item.quantity - 1), method: :patch, class: "border-0 bg-transparent text-warning fw-bold px-1" do %>-<% end %>
+                  <span class="qty-val small"><%= item.quantity %></span>
+                  <%= button_to update_quantity_cart_path(product_id: item.product.id, quantity: item.quantity + 1), method: :patch, class: "border-0 bg-transparent text-warning fw-bold px-1" do %>+<% end %>
+                </div>
+
+                <div class="small fw-bold text-end" style="width: 50px;">
+                  ₹<%= item.line_total %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+
+          <!-- Bill summary -->
+          <div class="border-top pt-2">
+            <div class="bill-row">
+              <span>Item Subtotal</span>
+              <span>₹<%= cart.subtotal %></span>
+            </div>
+            <div class="bill-row">
+              <span>Delivery Fee</span>
+              <span><%= cart.delivery_fee == 0 ? '<span class="text-success fw-bold">FREE</span>'.html_safe : "₹#{cart.delivery_fee}" %></span>
+            </div>
+            <div class="bill-row">
+              <span>GST & Taxes (5%)</span>
+              <span>₹<%= cart.tax %></span>
+            </div>
+            <div class="bill-row total-row">
+              <span>To Pay</span>
+              <span>₹<%= cart.total %></span>
+            </div>
+          </div>
+
+          <%= link_to checkout_path, class: "btn btn-swigy-primary w-100 py-2 mt-3 fw-bold" do %>
+            Checkout <i class="bi bi-arrow-right ms-1"></i>
+          <% end %>
+        <% else %>
+          <div class="text-center py-4">
+            <i class="bi bi-bag-x fs-1 text-muted opacity-50 mb-2 d-block"></i>
+            <h4 class="h6 fw-bold mb-1">Your cart is empty</h4>
+            <p class="text-muted small mb-0">Good food is always cooking! Add some items from the menu.</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>

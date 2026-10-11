@@ -1,0 +1,104 @@
+<div class="container py-4">
+  <!-- Search Header -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-lg-8">
+      <%= form_with url: search_path, method: :get, local: true, class: "hero-search-box w-100 shadow-sm" do |f| %>
+        <i class="bi bi-search text-warning fs-5 me-2"></i>
+        <%= f.text_field :q, value: @query, placeholder: "Search for restaurants, biryani, burgers, pizza...", autofocus: true, aria: { label: "Search" } %>
+        <button type="submit" class="btn btn-swigy-primary rounded-pill px-4">Search</button>
+      <% end %>
+    </div>
+  </div>
+
+  <% if @query.present? %>
+    <div class="mb-4">
+      <h1 class="h4 fw-bold">Search results for "<%= @query %>"</h1>
+      <p class="text-muted small">Found <%= @restaurants.count %> <%= 'restaurant'.pluralize(@restaurants.count) %> and <%= @products.count %> <%= 'dish'.pluralize(@products.count) %></p>
+    </div>
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-pills mb-4 gap-2" id="searchTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active rounded-pill fw-bold" id="restaurants-tab" data-bs-toggle="pill" data-bs-target="#restaurants-content" type="button" role="tab">
+          <i class="bi bi-shop me-1"></i> Restaurants (<%= @restaurants.count %>)
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link rounded-pill fw-bold" id="dishes-tab" data-bs-toggle="pill" data-bs-target="#dishes-content" type="button" role="tab">
+          <i class="bi bi-egg-fried me-1"></i> Dishes (<%= @products.count %>)
+        </button>
+      </li>
+    </ul>
+
+    <!-- Tab contents -->
+    <div class="tab-content" id="searchTabsContent">
+      <!-- Restaurants Tab -->
+      <div class="tab-content show active" id="restaurants-content" role="tabpanel">
+        <% if @restaurants.any? %>
+          <div class="row g-4">
+            <% @restaurants.each do |restaurant| %>
+              <%= render partial: "restaurants/restaurant_card", locals: { restaurant: restaurant } %>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="p-5 text-center bg-white rounded-4 border">
+            <i class="bi bi-shop fs-1 text-muted mb-2 d-block"></i>
+            <h5 class="fw-bold">No restaurants match "<%= @query %>"</h5>
+            <p class="text-muted small">Try checking for typos or search for a dish name.</p>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Dishes Tab -->
+      <div class="tab-pane fade" id="dishes-content" role="tabpanel">
+        <% if @products.any? %>
+          <div class="row g-3">
+            <% @products.each do |product| %>
+              <div class="col-md-6">
+                <div class="dish-card">
+                  <div class="dish-info">
+                    <div class="food-type-icon <%= product.is_veg? ? 'veg' : 'non-veg' %>"></div>
+                    <h3 class="dish-title"><%= product.name %></h3>
+                    <div class="dish-price">₹<%= product.price %></div>
+                    <% if product.restaurant.present? %>
+                      <div class="small text-secondary mb-2">
+                        <i class="bi bi-shop me-1"></i><%= link_to product.restaurant.name, restaurant_path(product.restaurant), class: "text-decoration-none fw-semibold" %>
+                      </div>
+                    <% end %>
+                    <p class="dish-description"><%= product.description %></p>
+                  </div>
+                  <div class="dish-action">
+                    <img src="<%= product.display_image %>" alt="<%= product.name %>" class="dish-img" loading="lazy">
+                    <%= button_to add_item_cart_path(product_id: product.id), method: :post, class: "dish-add-btn" do %>
+                      ADD +
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="p-5 text-center bg-white rounded-4 border">
+            <i class="bi bi-egg-fried fs-1 text-muted mb-2 d-block"></i>
+            <h5 class="fw-bold">No dishes match "<%= @query %>"</h5>
+            <p class="text-muted small">Try searching for other keywords like "Biryani", "Pizza", or "Paneer".</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div class="text-center py-5">
+      <div class="p-5 bg-white rounded-4 border d-inline-block" style="max-width: 500px;">
+        <i class="bi bi-search fs-1 text-warning mb-3 d-block"></i>
+        <h3 class="h4 fw-bold">Find your favorite cravings</h3>
+        <p class="text-muted small mb-4">Search across hundreds of restaurants, cuisines, and mouthwatering dishes in your city.</p>
+        <div class="d-flex justify-content-center flex-wrap gap-2">
+          <%= link_to "Biryani", search_path(q: "Biryani"), class: "btn btn-outline-secondary btn-sm rounded-pill" %>
+          <%= link_to "Pizza", search_path(q: "Pizza"), class: "btn btn-outline-secondary btn-sm rounded-pill" %>
+          <%= link_to "Burger", search_path(q: "Burger"), class: "btn btn-outline-secondary btn-sm rounded-pill" %>
+          <%= link_to "Thali", search_path(q: "Thali"), class: "btn btn-outline-secondary btn-sm rounded-pill" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

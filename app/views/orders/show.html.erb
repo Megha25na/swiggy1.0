@@ -1,10 +1,210 @@
-<p style="color: green"><%= notice %></p>
+<div class="container py-4">
+  <!-- Top Navigation & Breadcrumb -->
+  <nav aria-label="breadcrumb" class="mb-3 small">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><%= link_to "Home", root_path, class: "text-muted" %></li>
+      <li class="breadcrumb-item"><%= link_to "My Orders", orders_path, class: "text-muted" %></li>
+      <li class="breadcrumb-item active fw-bold text-dark">Order #SWG-<%= @order.id %></li>
+    </ol>
+  </nav>
 
-<%= render @order %>
+  <!-- Header Banner -->
+  <div class="card border-0 rounded-4 shadow-sm p-4 bg-white mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+      <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <h1 class="h3 fw-bold mb-0">Order #SWG-<%= @order.id %></h1>
+          <span class="<%= @order.status_badge_class %>">
+            <%= @order.order_status.titleize %>
+          </span>
+        </div>
+        <p class="text-muted small mb-0">
+          Placed on <%= @order.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+          <% if @order.restaurant.present? %>
+            • From <strong><%= link_to @order.restaurant.name, restaurant_path(@order.restaurant), class: "text-dark text-decoration-none" %></strong>
+          <% end %>
+        </p>
+      </div>
 
-<div>
-  <%= link_to "Edit this order", edit_order_path(@order) %> |
-  <%= link_to "Back to orders", orders_path %>
+      <div class="d-flex gap-2">
+        <%= button_to reorder_order_path(@order), method: :post, class: "btn btn-swigy-primary rounded-pill px-4" do %>
+          <i class="bi bi-arrow-repeat me-1"></i> Reorder
+        <% end %>
+      </div>
+    </div>
 
-  <%= button_to "Destroy this order", @order, method: :delete %>
+    <!-- Realistic Order Lifecycle Tracker -->
+    <div class="mt-5">
+      <h2 class="h6 fw-bold text-muted text-uppercase mb-4">Live Order Status Tracking</h2>
+
+      <% current_step = @order.tracking_step_number %>
+      <div class="tracking-stepper">
+        <!-- Step 1: Placed -->
+        <div class="tracking-step <%= 'completed' if current_step > 1 %> <%= 'current' if current_step == 1 %>">
+          <div class="step-icon">
+            <i class="bi <%= current_step > 1 ? 'bi-check-lg' : 'bi-receipt' %>"></i>
+          </div>
+          <div class="step-label">Order Placed</div>
+          <div class="step-subtext">Received by Swigy</div>
+        </div>
+
+        <!-- Step 2: Confirmed -->
+        <div class="tracking-step <%= 'completed' if current_step > 2 %> <%= 'current' if current_step == 2 %>">
+          <div class="step-icon">
+            <i class="bi <%= current_step > 2 ? 'bi-check-lg' : 'bi-check-circle' %>"></i>
+          </div>
+          <div class="step-label">Confirmed</div>
+          <div class="step-subtext">Restaurant accepted</div>
+        </div>
+
+        <!-- Step 3: Preparing -->
+        <div class="tracking-step <%= 'completed' if current_step > 3 %> <%= 'current' if current_step == 3 %>">
+          <div class="step-icon">
+            <i class="bi <%= current_step > 3 ? 'bi-check-lg' : 'bi-fire' %>"></i>
+          </div>
+          <div class="step-label">Preparing</div>
+          <div class="step-subtext">Chef is cooking</div>
+        </div>
+
+        <!-- Step 4: Out for delivery -->
+        <div class="tracking-step <%= 'completed' if current_step > 4 %> <%= 'current' if current_step == 4 %>">
+          <div class="step-icon">
+            <i class="bi <%= current_step > 4 ? 'bi-check-lg' : 'bi-bicycle' %>"></i>
+          </div>
+          <div class="step-label">On the Way</div>
+          <div class="step-subtext">Partner dispatched</div>
+        </div>
+
+        <!-- Step 5: Delivered -->
+        <div class="tracking-step <%= 'completed' if current_step == 5 %>">
+          <div class="step-icon">
+            <i class="bi bi-house-door"></i>
+          </div>
+          <div class="step-label">Delivered</div>
+          <div class="step-subtext">Enjoy your meal!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Left Column: Delivery Partner & Destination Details -->
+    <div class="col-lg-7">
+      <!-- Delivery Partner Card -->
+      <div class="card border-0 rounded-4 shadow-sm p-4 bg-white mb-4">
+        <h2 class="h6 fw-bold mb-3 d-flex align-items-center gap-2">
+          <i class="bi bi-person-badge text-warning fs-5"></i>
+          <span>Delivery Details</span>
+        </h2>
+
+        <div class="p-3 bg-light rounded-3 d-flex align-items-center justify-content-between mb-3">
+          <div class="d-flex align-items-center gap-3">
+            <div class="bg-warning text-dark rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+              <i class="bi bi-bicycle fs-4"></i>
+            </div>
+            <div>
+              <div class="fw-bold text-dark">Delivery Partner: Rajesh K.</div>
+              <div class="small text-muted"><i class="bi bi-patch-check-fill text-success me-1"></i>Temperature checked & safety verified</div>
+            </div>
+          </div>
+          <span class="badge bg-white text-dark border px-3 py-2 small fw-bold">
+            <i class="bi bi-clock me-1 text-warning"></i> 25-30 Mins
+          </span>
+        </div>
+
+        <div class="mb-3">
+          <div class="small text-muted fw-bold">Delivering To:</div>
+          <div class="fw-bold text-dark"><%= @order.customer_name %></div>
+          <div class="text-secondary small"><%= @order.delivery_address %></div>
+          <div class="text-secondary small mt-1"><i class="bi bi-telephone me-1"></i><%= @order.contact_phone %></div>
+        </div>
+
+        <% if @order.notes.present? %>
+          <div class="p-2 px-3 bg-warning-subtle rounded-3 small">
+            <strong>Delivery Note:</strong> <%= @order.notes %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Payment info -->
+      <div class="card border-0 rounded-4 shadow-sm p-4 bg-white">
+        <h2 class="h6 fw-bold mb-3 d-flex align-items-center gap-2">
+          <i class="bi bi-credit-card text-success fs-5"></i>
+          <span>Payment Information</span>
+        </h2>
+
+        <div class="d-flex justify-content-between align-items-center mb-2 small">
+          <span class="text-muted">Payment Method</span>
+          <span class="fw-bold"><%= @order.payment_method %></span>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-2 small">
+          <span class="text-muted">Payment Status</span>
+          <span class="badge bg-success-subtle text-success fw-bold text-uppercase"><%= @order.payment_status %></span>
+        </div>
+
+        <% if @order.payment_ref.present? %>
+          <div class="d-flex justify-content-between align-items-center small">
+            <span class="text-muted">Transaction Reference</span>
+            <span class="font-monospace text-secondary"><%= @order.payment_ref %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Right Column: Itemized Receipt -->
+    <div class="col-lg-5">
+      <div class="card border-0 rounded-4 shadow-sm p-4 bg-white">
+        <h2 class="h6 fw-bold mb-3 border-bottom pb-2">Order Bill Summary</h2>
+
+        <div class="d-flex flex-column gap-2 mb-3">
+          <% @order.items.each do |item| %>
+            <div class="d-flex justify-content-between align-items-center small py-1">
+              <div class="d-flex align-items-center gap-2 text-truncate" style="max-width: 220px;">
+                <span class="food-type-icon <%= item.product&.is_veg? ? 'veg' : 'non-veg' %>" style="width: 10px; height: 10px; margin-bottom: 0;"></span>
+                <span class="fw-semibold text-dark text-truncate"><%= item.product&.name || "Item" %></span>
+                <span class="text-muted">x <%= item.quantity %></span>
+              </div>
+              <span class="fw-bold">₹<%= item.line_total %></span>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="border-top pt-2">
+          <div class="bill-row">
+            <span>Item Subtotal</span>
+            <span>₹<%= @order.subtotal %></span>
+          </div>
+
+          <div class="bill-row">
+            <span>Delivery Fee</span>
+            <span><%= @order.delivery_fee == 0 ? '<span class="text-success fw-bold">FREE</span>'.html_safe : "₹#{@order.delivery_fee}" %></span>
+          </div>
+
+          <div class="bill-row">
+            <span>GST & Restaurant Charges</span>
+            <span>₹<%= @order.tax %></span>
+          </div>
+
+          <% if @order.discount.to_i > 0 %>
+            <div class="bill-row text-success">
+              <span>Discounts Applied</span>
+              <span>-₹<%= @order.discount %></span>
+            </div>
+          <% end %>
+
+          <div class="bill-row total-row">
+            <span>Total Paid</span>
+            <span class="text-warning">₹<%= @order.total %></span>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-top text-center">
+          <%= link_to orders_path, class: "btn btn-outline-dark btn-sm rounded-pill px-4" do %>
+            <i class="bi bi-arrow-left me-1"></i> Back to All Orders
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

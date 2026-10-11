@@ -3,46 +3,29 @@ require "test_helper"
 class OrdersControllerTest < ActionDispatch::IntegrationTest
   setup do
     @order = orders(:one)
+    @user = users(:one)
   end
 
-  test "should get index" do
+  test "guest is redirected to sign in when accessing orders" do
+    get orders_url
+    assert_redirected_to new_user_session_url
+  end
+
+  test "customer can get order history" do
+    sign_in @user
     get orders_url
     assert_response :success
   end
 
-  test "should get new" do
-    get new_order_url
-    assert_response :success
-  end
-
-  test "should create order" do
-    assert_difference("Order.count") do
-      post orders_url, params: { order: { order_status: @order.order_status, payment_ref: @order.payment_ref, payment_status: @order.payment_status, restru_id: @order.restru_id, total: @order.total, user_id: @order.user_id } }
-    end
-
-    assert_redirected_to order_url(Order.last)
-  end
-
-  test "should show order" do
+  test "customer can show order" do
+    sign_in @user
     get order_url(@order)
     assert_response :success
   end
 
-  test "should get edit" do
-    get edit_order_url(@order)
-    assert_response :success
-  end
-
-  test "should update order" do
-    patch order_url(@order), params: { order: { order_status: @order.order_status, payment_ref: @order.payment_ref, payment_status: @order.payment_status, restru_id: @order.restru_id, total: @order.total, user_id: @order.user_id } }
-    assert_redirected_to order_url(@order)
-  end
-
-  test "should destroy order" do
-    assert_difference("Order.count", -1) do
-      delete order_url(@order)
-    end
-
-    assert_redirected_to orders_url
+  test "customer can reorder past order" do
+    sign_in @user
+    post reorder_order_url(@order)
+    assert_redirected_to cart_url
   end
 end

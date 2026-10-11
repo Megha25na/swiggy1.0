@@ -1,10 +1,53 @@
-<p style="color: green"><%= notice %></p>
+<div class="container py-4">
+  <nav aria-label="breadcrumb" class="mb-3 small">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><%= link_to "Home", root_path, class: "text-muted" %></li>
+      <li class="breadcrumb-item"><%= link_to "Dishes", products_path, class: "text-muted" %></li>
+      <li class="breadcrumb-item active fw-bold text-dark"><%= @product.name %></li>
+    </ol>
+  </nav>
 
-<%= render @product %>
+  <div class="card border-0 rounded-4 shadow-sm p-4 bg-white">
+    <div class="row g-4 align-items-center">
+      <div class="col-md-5 text-center">
+        <img src="<%= @product.display_image %>" alt="<%= @product.name %>" class="img-fluid rounded-4 shadow" style="max-height: 320px; width: 100%; object-fit: cover;">
+      </div>
 
-<div>
-  <%= link_to "Edit this product", edit_product_path(@product) %> |
-  <%= link_to "Back to products", products_path %>
+      <div class="col-md-7">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <span class="food-type-icon <%= @product.is_veg? ? 'veg' : 'non-veg' %>"></span>
+          <span class="badge bg-light text-dark border"><%= @product.category.presence || "Specialty" %></span>
+          <% if @product.available? %>
+            <span class="badge bg-success-subtle text-success">In Stock</span>
+          <% else %>
+            <span class="badge bg-danger-subtle text-danger">Currently Unavailable</span>
+          <% end %>
+        </div>
 
-  <%= button_to "Destroy this product", @product, method: :delete %>
+        <h1 class="h2 fw-bold text-dark mb-2"><%= @product.name %></h1>
+
+        <div class="fs-3 fw-bold text-dark mb-3">₹<%= @product.price %></div>
+
+        <% if @product.restaurant.present? %>
+          <div class="p-3 bg-light rounded-3 mb-3 d-flex align-items-center justify-content-between">
+            <div>
+              <span class="small text-muted d-block">Prepared by</span>
+              <strong class="text-dark"><%= @product.restaurant.name %></strong>
+              <span class="badge rating-badge ms-2"><i class="bi bi-star-fill"></i> <%= @product.restaurant.rating || 4.2 %></span>
+            </div>
+            <%= link_to "View Restaurant Menu", restaurant_path(@product.restaurant), class: "btn btn-outline-dark btn-sm rounded-pill" %>
+          </div>
+        <% end %>
+
+        <p class="text-muted mb-4"><%= @product.description %></p>
+
+        <div class="d-flex align-items-center gap-3">
+          <%= button_to add_item_cart_path(product_id: @product.id), method: :post, class: "btn btn-swigy-primary px-4 py-2" do %>
+            <i class="bi bi-bag-plus me-1"></i> Add to Cart
+          <% end %>
+          <%= link_to "Back to Dishes", products_path, class: "btn btn-light rounded-pill px-4" %>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
